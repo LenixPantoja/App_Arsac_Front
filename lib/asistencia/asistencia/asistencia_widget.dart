@@ -113,6 +113,12 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // Obteniendo la fecha y hora actual
+    DateTime now = DateTime.now();
+
+    // Formateando la fecha y hora
+    String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm').format(now);
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -593,22 +599,62 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              /* // Código para abrir el lector de código de barras
-                                              _model.scanner =
-                                                  await FlutterBarcodeScanner
-                                                      .scanBarcode(
-                                                '#007D2D', // color de la línea de escaneo
-                                                'Cancelar', // texto del botón de cancelar
-                                                true, // muestra o no el icono de flash
-                                                ScanMode
-                                                    .QR, // modo de escaneo (QR, BARCODE)
-                                              ); */
-                                             
+                                              String tipoAsistencia =
+                                                  "PRESENTE";
+                                              String descripcion = "NINGUNA";
+                                              int id_matricula =
+                                                  estudianteMC["id_Matricula"];
+                                              Null soporte =null;
+
+                                              _model.apiResultnmd =
+                                                  await ApiArsacGroup
+                                                      .apiAsistenciaEstudianteCall
+                                                      .callAsistencia(
+                                                          tipoAsistencia:
+                                                              tipoAsistencia,
+                                                          descripcion:
+                                                              descripcion,
+                                                          horaLlegada:
+                                                              formattedDateTime
+                                                                  .toString(),
+                                                          soporte: soporte,
+                                                          matriculaEstudiante:
+                                                              id_matricula
+                                                                  .toString());
+                                              
+                                              if ((_model.apiResultnmd
+                                                      ?.succeeded ??
+                                                  true)) {
+                                                await showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (alertDialogContext) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          'CORRECTO'),
+                                                      content: const Text(
+                                                          'Se registro la asistencia del estudiante'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                  alertDialogContext),
+                                                          child:
+                                                              const Text('Ok'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                print("errorrrrrrr");
+                                              }
                                               setState(() {
-                                                print(estudianteMC["id_Matricula"]);
-                                                print(estudianteMC["Nombre_Estudiante"]);
-                                                print(estudianteMC["Identificacion_Estudiante"]);
-                                                print("");
+                                                print(
+                                                    estudianteMC["id_Matricula"]
+                                                        .runtimeType);
+                                                print(estudianteMC[
+                                                    "id_Matricula"]);
                                               });
                                             },
                                             child: ClipRRect(

@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/componentes/menu/menu_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
@@ -18,6 +19,8 @@ class AsistenciaModel extends FlutterFlowModel<AsistenciaWidget> {
   FormFieldController<String>? dropDownValueController3;
   // Model for Menu component.
   late MenuModel menuModel;
+  // Stores action output result for [Backend Call - API (ApiAsistenciaEstudiante)] action in Button widget.
+  ApiCallResponse? apiResultnmd;
 
   Object? get scanner => null;
 
