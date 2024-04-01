@@ -205,24 +205,60 @@ class ApiMateriaCursoEstudianteCall {
   }
 }
 
+
+
 class ApiAsistenciaEstudianteCall {
-  final String apiUrl =
-          '${ApiArsacGroup.baseUrl}/api/AsistenciaEstudiante/';
+  Future<ApiCallResponse> callAsistencia({
+    String? tipoAsistencia = '',
+    String? descripcion = '',
+    String? horaLlegada ='',
+    String? soporte = '',
+    String? matriculaEstudiante=''
+  }) async {
+    final Map<String, dynamic> requestBody = {
+      "tipo_asistencia": tipoAsistencia,
+      "descripcion": descripcion,
+      "hora_llegada": horaLlegada,
+      "soporte": soporte,
+      "matricula_estudiante": matriculaEstudiante
+    };
 
-  Future<void> postAsistenciaEstudiante(Map<String, dynamic> data) async {
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(data),
+    final String ffApiRequestBody = jsonEncode(requestBody);
+
+    final response = await ApiManager.instance.makeApiCall(
+      callName: 'ApiLogin',
+      apiUrl: '${ApiArsacGroup.baseUrl}api/AsistenciaEstudiante/',
+      callType: ApiCallType.POST,
+      headers: {'Authorization': 'Bearer $token'},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      alwaysAllowBody: false,
     );
-
-    if (response.statusCode != 201) {
-      throw Exception('Failed to post data');
+    
+    if (response.statusCode == 200) {
+      print("paso por aqui");
+      print(tipoAsistencia);
+      print(descripcion);
+      print(horaLlegada);
+      print(soporte);
+      print(matriculaEstudiante);
+      print(response.jsonBody);
+      return response;
+      
+    } else {
+      print(
+          "Error al llamar a la API Login. Código de estado: ${response.statusCode}");
     }
+    print("no paso a la pai");
+    return response;
   }
 }
+
 
 
 class ApiCrearHorarioCall {
