@@ -14,8 +14,6 @@ class NotificacionesModel extends FlutterFlowModel<NotificacionesWidget> {
   // Model for Menu component.
   late MenuModel menuModel;
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {
     menuModel = createModel(context, () => MenuModel());
@@ -26,8 +24,4 @@ class NotificacionesModel extends FlutterFlowModel<NotificacionesWidget> {
     tabBarController?.dispose();
     menuModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

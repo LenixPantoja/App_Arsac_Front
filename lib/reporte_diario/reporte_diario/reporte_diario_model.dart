@@ -9,8 +9,6 @@ class ReporteDiarioModel extends FlutterFlowModel<ReporteDiarioWidget> {
   // Model for Menu component.
   late MenuModel menuModel;
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {
     menuModel = createModel(context, () => MenuModel());
@@ -20,8 +18,4 @@ class ReporteDiarioModel extends FlutterFlowModel<ReporteDiarioWidget> {
   void dispose() {
     menuModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

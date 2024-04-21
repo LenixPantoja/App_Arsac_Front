@@ -12,8 +12,6 @@ class HorarioModel extends FlutterFlowModel<HorarioWidget> {
   // Model for Menu component.
   late MenuModel menuModel;
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {
     calendarSelectedDay = DateTimeRange(
@@ -27,8 +25,4 @@ class HorarioModel extends FlutterFlowModel<HorarioWidget> {
   void dispose() {
     menuModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

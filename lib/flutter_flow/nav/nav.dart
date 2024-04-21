@@ -106,7 +106,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'CargarPermisos',
           path: '/cargarPermisos',
-          builder: (context, params) => const CargarPermisosWidget(),
+          builder: (context, params) => const CargarPermisosWidget(miMatricula: 0,),
         ),
         FFRoute(
           name: 'Observaciones',
@@ -161,7 +161,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'EditarObservacion',
           path: '/editarObservacion',
-          builder: (context, params) => const EditarObservacionWidget(),
+          builder: (context, params) => const EditarObservacionWidget(miDescripcion: '', miAsistencia: 0, miIdObservacion: 0,),
         ),
         FFRoute(
           name: 'Estudiante',
