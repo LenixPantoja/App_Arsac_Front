@@ -1,3 +1,5 @@
+import 'package:arsac_app/backend/api_requests/api_calls.dart';
+
 import '/componentes/menu/menu_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -9,7 +11,14 @@ import 'editar_observacion_model.dart';
 export 'editar_observacion_model.dart';
 
 class EditarObservacionWidget extends StatefulWidget {
-  const EditarObservacionWidget({super.key});
+  //Definimos la variable descricion para recibir lo que entrega la visa observaciones
+  final String miDescripcion;
+  final int miAsistencia;
+  final int miIdObservacion;
+
+  const EditarObservacionWidget(
+      {required this.miDescripcion, required this.miAsistencia, required this.miIdObservacion, Key? key})
+      : super(key: key);
 
   @override
   State<EditarObservacionWidget> createState() =>
@@ -28,6 +37,7 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
 
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
+    _model.textController.text = widget.miDescripcion;
   }
 
   @override
@@ -70,7 +80,8 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 12.0),
+                padding:
+                    const EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 12.0),
                 child: Container(
                   width: double.infinity,
                   height: 83.0,
@@ -102,7 +113,8 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Align(
-                                  alignment: const AlignmentDirectional(0.0, 0.0),
+                                  alignment:
+                                      const AlignmentDirectional(0.0, 0.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -156,8 +168,9 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
                                                       .alternate,
                                               borderWidth: 2.0,
                                               borderRadius: 8.0,
-                                              margin: const EdgeInsetsDirectional
-                                                  .fromSTEB(
+                                              margin:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(
                                                       16.0, 4.0, 16.0, 4.0),
                                               hidesUnderline: true,
                                               isOverButton: true,
@@ -168,8 +181,8 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
                                         ),
                                       ),
                                       Align(
-                                        alignment:
-                                            const AlignmentDirectional(1.0, 0.0),
+                                        alignment: const AlignmentDirectional(
+                                            1.0, 0.0),
                                         child: Container(
                                           width: 45.0,
                                           height: 45.0,
@@ -188,8 +201,9 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
                                                   BorderRadius.circular(0.0),
                                             ),
                                             child: Align(
-                                              alignment: const AlignmentDirectional(
-                                                  1.0, 0.0),
+                                              alignment:
+                                                  const AlignmentDirectional(
+                                                      1.0, 0.0),
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
@@ -219,7 +233,8 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
               Align(
                 alignment: const AlignmentDirectional(0.0, 0.0),
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 12.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                      0.0, 12.0, 0.0, 12.0),
                   child: Container(
                     width: double.infinity,
                     height: 62.0,
@@ -268,7 +283,8 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
                     borderRadius: BorderRadius.circular(0.0),
                   ),
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        8.0, 0.0, 8.0, 0.0),
                     child: TextFormField(
                       controller: _model.textController,
                       focusNode: _model.textFieldFocusNode,
@@ -342,10 +358,36 @@ class _EditarObservacionWidgetState extends State<EditarObservacionWidget> {
                       Align(
                         alignment: const AlignmentDirectional(0.0, 0.0),
                         child: FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
+                          onPressed: () async {
+                            _model.apiResultnmd = await ApiArsacGroup
+                                .apiObservacionesEstudianteCall
+                                .putObservaciones(
+                                    pIdObservacion: widget.miIdObservacion,
+                                    asistenciaEst: widget.miAsistencia,
+                                    observacionEst: _model.textController.text);
+                            if ((_model.apiResultnmd?.succeeded ?? true)) {
+                              await showDialog(
+                                context: context,
+                                builder: (alertDialogContext) {
+                                  return AlertDialog(
+                                    title: const Text('CORRECTO'),
+                                    content: const Text(
+                                        'Se actualizó la observación del estudiante'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(alertDialogContext),
+                                        child: const Text('Ok'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              print("Error");
+                            }
                           },
-                          text: 'Guardar',
+                          text: 'Actualizar Observación',
                           options: FFButtonOptions(
                             width: double.infinity,
                             height: 40.0,

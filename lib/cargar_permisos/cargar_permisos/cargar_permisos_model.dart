@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/componentes/menu/menu_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'cargar_permisos_widget.dart' show CargarPermisosWidget;
@@ -10,10 +11,13 @@ class CargarPermisosModel extends FlutterFlowModel<CargarPermisosWidget> {
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
 
+  // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode;
+  TextEditingController? textController;
+  String? Function(BuildContext, String?)? textControllerValidator;
+  ApiCallResponse? apiResultnmd;
   // Model for Menu component.
   late MenuModel menuModel;
-
-  /// Initialization and disposal methods.
 
   @override
   void initState(BuildContext context) {
@@ -22,10 +26,9 @@ class CargarPermisosModel extends FlutterFlowModel<CargarPermisosWidget> {
 
   @override
   void dispose() {
+    textFieldFocusNode?.dispose();
+    textController?.dispose();
+
     menuModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

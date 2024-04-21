@@ -32,8 +32,6 @@ class ReportePorEstudianteModel
   // Model for Menu component.
   late MenuModel menuModel;
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {
     menuModel = createModel(context, () => MenuModel());
@@ -52,8 +50,4 @@ class ReportePorEstudianteModel
 
     menuModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }

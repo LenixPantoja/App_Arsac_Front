@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'observaciones_widget.dart' show ObservacionesWidget;
 import 'package:flutter/material.dart';
+import '/backend/api_requests/api_calls.dart';
 
 class ObservacionesModel extends FlutterFlowModel<ObservacionesWidget> {
   ///  State fields for stateful widgets in this page.
@@ -17,6 +18,9 @@ class ObservacionesModel extends FlutterFlowModel<ObservacionesWidget> {
   String? dropDownValue3;
   FormFieldController<String>? dropDownValueController3;
   // Model for Menu component.
+  // Api call response 
+  ApiCallResponse? apiResultnmd;
+
   late MenuModel menuModel;
 
   /// Initialization and disposal methods.

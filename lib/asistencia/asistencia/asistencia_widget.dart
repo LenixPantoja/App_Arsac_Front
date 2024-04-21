@@ -1,5 +1,5 @@
+import 'package:arsac_app/cargar_permisos/cargar_permisos/cargar_permisos_widget.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-
 import '/componentes/menu/menu_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -59,7 +59,6 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
     List<dynamic> data = await apiCall.fetchEstudiantes(pMateria, pCurso);
     setState(() {
       listaEstudiantesMC = data;
-      print(listaEstudiantesMC);
     });
   }
 
@@ -69,15 +68,20 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
   // 2.- Se obtiene el nombre del curso
   // 3.- Se toma el nombre del curso y se pasa el nombre del curso como parámetro al metodo @obtenerIdCurso(pCurso)
   //     para obtener el id del curso y pasarlo a la método @_fetchEstudiantesData(pMateria, pCurso)
-  int obtenerIdCurso(String pCurso) {
+ int obtenerIdCurso(String pCurso) {
     int idCurso = 0;
     for (int i = 0; i < listaCursosDocente.length; i++) {
-      if (listaCursosDocente[i]["nombre_curso"] == pCurso) {
+      String cursoMateria = listaCursosDocente[i]["nombre_curso"] +
+          ' | ' +
+          listaCursosDocente[i]["materia"];
+      if (cursoMateria == pCurso) {
         idCurso = listaCursosDocente[i]["id"];
+        materiaSeleccionada = listaCursosDocente[i]["materia"];
       }
     }
     return idCurso;
   }
+
 
 // Método para obtener el id del materia dado el nombre de la materia
   // @ Proceso:
@@ -165,82 +169,7 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  width: 233.0,
-                                  height: 73.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Card(
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          elevation: 12.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                          child: FlutterFlowDropDown<String>(
-                                            controller: _model
-                                                    .dropDownValueController1 ??=
-                                                FormFieldController<String>(
-                                                    null),
-                                            options: listaCursosDocente
-                                                .map<String>((curso) =>
-                                                    curso["nombre_curso"]
-                                                        as String)
-                                                .toList(),
-                                            onChanged: (String? val) {
-                                              setState(() =>
-                                                  _model.dropDownValue1 = val);
-                                              cursoSeleccionado = val!;
-                                            },
-                                            width: 355.0,
-                                            height: 53.0,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium,
-                                            hintText: 'Seleccione Curso',
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryBackground,
-                                            elevation: 2.0,
-                                            borderColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .alternate,
-                                            borderWidth: 2.0,
-                                            borderRadius: 8.0,
-                                            margin: const EdgeInsetsDirectional
-                                                .fromSTEB(16.0, 4.0, 16.0, 4.0),
-                                            hidesUnderline: true,
-                                            isOverButton: true,
-                                            isSearchable: false,
-                                            isMultiSelect: false,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+              
                       Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             0.0, 12.0, 0.0, 0.0),
@@ -268,14 +197,15 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                     controller:
                                         _model.dropDownValueController3 ??=
                                             FormFieldController<String>(null),
-                                    options: listaMateriasDocente
-                                        .map<String>((materia) =>
-                                            materia['Materia'] as String)
-                                        .toList(),
-                                    onChanged: (String? val) {
-                                      setState(
-                                          () => _model.dropDownValue3 = val);
-                                      materiaSeleccionada = val!;
+                                    options: listaCursosDocente
+                                                .map<String>((curso) =>
+                                                   curso["nombre_curso"]+ ' | '+curso["materia"]
+                                                        as String)
+                                                .toList(),
+                                            onChanged: (String? val) {
+                                              setState(() =>
+                                                  _model.dropDownValue1 = val);
+                                              cursoSeleccionado = val!;
                                     },
                                     width: 292.0,
                                     height: 43.0,
@@ -475,8 +405,17 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                       ) ??
                                                       false;
                                               if (confirmDialogResponse) {
-                                                context.pushNamed(
-                                                    'CargarPermisos');
+                                                int miMatricula =
+                                                    estudianteMC["id_Matricula"];
+
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute<Null>(
+                                                        builder: (BuildContext
+                                                            context) {
+                                                  return CargarPermisosWidget(
+                                                      miMatricula: miMatricula);
+                                                }));
+                                                //Pasamos el id de la matricula
                                               } else {
                                                 context.pushNamed(
                                                   'Asistencia',
@@ -530,38 +469,62 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              var confirmDialogResponse =
-                                                  await showDialog<bool>(
-                                                        context: context,
-                                                        builder:
-                                                            (alertDialogContext) {
-                                                          return AlertDialog(
-                                                            title: const Text(
-                                                                'Confirmar Falta'),
-                                                            content: const Text(
-                                                                '¿El estudiante no asistió hoy?'),
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    Navigator.pop(
-                                                                        alertDialogContext,
-                                                                        false),
-                                                                child: const Text(
-                                                                    'Cancelar'),
-                                                              ),
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    Navigator.pop(
-                                                                        alertDialogContext,
-                                                                        true),
-                                                                child: const Text(
-                                                                    'Confirmar'),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      ) ??
-                                                      false;
+                                              await showDialog<bool>(
+                                                    context: context,
+                                                    builder:
+                                                        (alertDialogContext) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Confirmar Falta'),
+                                                        content: const Text(
+                                                            '¿El estudiante no asistió hoy?'),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    alertDialogContext,
+                                                                    false),
+                                                            child: const Text(
+                                                                'Cancelar'),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed:
+                                                                () async {
+                                                              Navigator.pop(
+                                                                  alertDialogContext,
+                                                                  true);
+                                                              String
+                                                                  tipoAsistencia =
+                                                                  "AUSENTE";
+                                                              String
+                                                                  descripcion =
+                                                                  "EL ESTUDIANTE NO ASISTIO A CLASES";
+                                                              int idMatricula =estudianteMC["id"];
+                                                              Null soporte;
+                                                             
+                                                              _model.apiResultnmd = await ApiArsacGroup.apiAsistenciaEstudianteCall.callAsistencia(
+                                                                  tipoAsistencia:
+                                                                      tipoAsistencia,
+                                                                  descripcion:
+                                                                      descripcion,
+                                                                  horaLlegada:
+                                                                      formattedDateTime
+                                                                          .toString(),
+                                                                  soporte:
+                                                                      soporte,
+                                                                  matriculaEstudiante:
+                                                                      idMatricula
+                                                                          .toString());
+                                                              // This line prints an empty string, you might want to put something meaningful here.
+                                                            },
+                                                            child: const Text(
+                                                                'Confirmar'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ) ??
+                                                  false;
                                             },
                                             child: ClipRRect(
                                               borderRadius:
@@ -603,8 +566,9 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                   "PRESENTE";
                                               String descripcion = "NINGUNA";
                                               int id_matricula =
-                                                  estudianteMC["id_Matricula"];
-                                              Null soporte =null;
+                                                  estudianteMC["id"];
+                                                  print(estudianteMC["id"]);
+                                              Null soporte = null;
 
                                               _model.apiResultnmd =
                                                   await ApiArsacGroup
@@ -621,7 +585,7 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                           matriculaEstudiante:
                                                               id_matricula
                                                                   .toString());
-                                              
+
                                               if ((_model.apiResultnmd
                                                       ?.succeeded ??
                                                   true)) {
@@ -632,8 +596,8 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                     return AlertDialog(
                                                       title: const Text(
                                                           'CORRECTO'),
-                                                      content: const Text(
-                                                          'Se registro la asistencia del estudiante'),
+                                                      content: Text(
+                                                          'Se registró la asistencia del estudiante ${estudianteMC["Nombre_Estudiante"]}'),
                                                       actions: [
                                                         TextButton(
                                                           onPressed: () =>
@@ -649,13 +613,7 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                               } else {
                                                 print("errorrrrrrr");
                                               }
-                                              setState(() {
-                                                print(
-                                                    estudianteMC["id_Matricula"]
-                                                        .runtimeType);
-                                                print(estudianteMC[
-                                                    "id_Matricula"]);
-                                              });
+                                              setState(() {});
                                             },
                                             child: ClipRRect(
                                               borderRadius:

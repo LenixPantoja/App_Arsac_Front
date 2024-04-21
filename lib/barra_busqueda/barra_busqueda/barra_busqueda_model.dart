@@ -13,8 +13,6 @@ class BarraBusquedaModel extends FlutterFlowModel<BarraBusquedaWidget> {
   // Model for Menu component.
   late MenuModel menuModel;
 
-  /// Initialization and disposal methods.
-
   @override
   void initState(BuildContext context) {
     menuModel = createModel(context, () => MenuModel());
@@ -27,8 +25,4 @@ class BarraBusquedaModel extends FlutterFlowModel<BarraBusquedaWidget> {
 
     menuModel.dispose();
   }
-
-  /// Action blocks are added here.
-
-  /// Additional helper methods are added here.
 }
