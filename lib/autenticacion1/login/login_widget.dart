@@ -39,7 +39,12 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        // Si deseas desactivar el botón de retroceso, puedes devolver false aquí
+        return false;
+      },
+     child: Scaffold(
       key: scaffoldKey,
       backgroundColor: const Color(0xFFFAD02C),
       body: Container(
@@ -392,6 +397,6 @@ class _LoginWidgetState extends State<LoginWidget> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

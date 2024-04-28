@@ -1,6 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
+// ignore_for_file: avoid_print
 
+import 'dart:convert';
+
+import 'package:arsac_app/flutter_flow/flutter_flow_util.dart';
 import 'package:http/http.dart' as http;
 
 import 'api_manager.dart';
@@ -11,11 +13,13 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 
 String username = "";
 String token = "";
+String identificacionDocente = "";
 
 /// Start ApiArsac Group Code
 class Usuario {
   String nombreUsuario = username;
   String tokenUsuario = token;
+  String cedulaDocente = identificacionDocente;
 
   String getNombreUsuario() {
     return nombreUsuario;
@@ -23,6 +27,10 @@ class Usuario {
 
   String getTokenUsuario() {
     return tokenUsuario;
+  }
+
+  String getIdentificacionDocente() {
+    return cedulaDocente;
   }
 }
 
@@ -41,7 +49,7 @@ class ApiArsacGroup {
   static ApiGetUserCall apiGetUserCall = ApiGetUserCall();
   static ApiMateriaCursoEstudianteCall apiMateriaCursoEstudianteCall =
       ApiMateriaCursoEstudianteCall();
-  static ApiCrearHorarioCall apiCrearHorarioCall = ApiCrearHorarioCall();
+  static ApiHorarioDocenteCall apiHorarioDocenteCall = ApiHorarioDocenteCall();
   static ApiCrearPeriodoCall apiCrearPeriodoCall = ApiCrearPeriodoCall();
   static ApiCursoCall apiCrearCursoCall = ApiCursoCall();
   static ApiAsistenciaEstudianteCall apiAsistenciaEstudianteCall =
@@ -409,7 +417,8 @@ class ApiObservacionesEstudianteCall {
 
     final response = await ApiManager.instance.makeApiCall(
       callName: 'ApiObservacionesEstudianteCall',
-      apiUrl: '${ApiArsacGroup.baseUrl}/api/ObservacionesEstudiante/$pIdObservacion/',
+      apiUrl:
+          '${ApiArsacGroup.baseUrl}/api/ObservacionesEstudiante/$pIdObservacion/',
       callType: ApiCallType.PUT,
       headers: {'Authorization': 'Bearer $token'},
       params: {},
@@ -432,20 +441,37 @@ class ApiObservacionesEstudianteCall {
   }
 }
 
-class ApiCrearHorarioCall {
-  Future<ApiCallResponse> call() async {
-    return ApiManager.instance.makeApiCall(
-      callName: 'ApiCrearHorario',
-      apiUrl: '${ApiArsacGroup.baseUrl}api/crearHorario/',
-      callType: ApiCallType.GET,
-      headers: {},
-      params: {},
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      alwaysAllowBody: false,
-    );
+class ApiHorarioDocenteCall {
+  Future<List<dynamic>> getHorarioDocente(pUserDocente) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/HorarioDocente/?pUser=$pUserDocente';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API horario del docente: $error");
+      return [];
+    }
   }
 }
 
@@ -466,6 +492,318 @@ class ApiCrearPeriodoCall {
   }
 }
 
+class ApiReporteDiarioCall {
+  Future<List<dynamic>> fetchReporteDiario(
+      String pRango1, String pRango2, String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/reportePorDiario?pRango1=$pRango1&pRango2=$pRango2&pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API cursos por Docente: $error");
+      return [];
+    }
+  }
+}
+
+class ApiReporteDiarioCallPdf {
+  Future<List<int>> fetchReporteDiario(
+      String pRango1, String pRango2, String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/reportePorDiarioPDF?pRango1=$pRango1&pRango2=$pRango2&pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        // Verifica si la respuesta es un archivo PDF (en formato binario)
+        if (response.headers['content-type'] == 'application/pdf') {
+          // Devuelve los bytes del PDF
+          return response.bodyBytes;
+        } else {
+          print("La API no devolvió un archivo PDF");
+          return [];
+        }
+      } else {
+        print(
+            "Error al llamar a la API Rerporte. Código de estado: ${response.statusCode}");
+        print("Cuerpo de la respuesta: ${response.body}");
+        return [];
+      }
+    } catch (error) {
+      print("Error al llamar a la API: $error");
+      return [];
+    }
+  }
+}
+
+class ApiReporteFechasPorCursoCall {
+  Future<List<dynamic>> fetchReportePorCurso(int pCurso, int pMateria,
+      String pRango1, String pRango2, String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/reportePorCurso?pMateria=$pMateria&pCurso=$pCurso&pRango1=$pRango1&pRango2=$pRango2&pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+    
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API cursos por Docente: $error");
+      return [];
+    }
+  }
+}
+
+class ApiReporteFechasPorCursoCallPdf {
+  Future<List<int>> fetchReporteFechasPorDiario(int pCurso, int pMateria,
+      String pRango1, String pRango2, String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/reportePorCursoPDF?pMateria=$pMateria&pCurso=$pCurso&pRango1=$pRango1&pRango2=$pRango2&pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        // Verifica si la respuesta es un archivo PDF (en formato binario)
+        if (response.headers['content-type'] == 'application/pdf') {
+          // Devuelve los bytes del PDF
+          return response.bodyBytes;
+        } else {
+          print("La API no devolvió un archivo PDF");
+          return [];
+        }
+      } else {
+        print(
+            "Error al llamar a la API Rerporte. Código de estado: ${response.statusCode}");
+        print("Cuerpo de la respuesta: ${response.body}");
+        return [];
+      }
+    } catch (error) {
+      print("Error al llamar a la API: $error");
+      return [];
+    }
+  }
+}
+
+class ApiReportePorEstudianteCall {
+  Future<List<dynamic>> fetchReportePorEstudiante(
+      String pNumeroDocumento,
+      int pCurso,
+      int pMateria,
+      String pRango1,
+      String pRango2,
+      String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/reporteEstudiante?pNumeroDocumento=$pNumeroDocumento&pMateria=$pMateria&pCurso=$pCurso&pRango1=$pRango1&pRango2=$pRango2&pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API reporte por estudiante: $error");
+      return [];
+    }
+  }
+}
+
+class ApiReportePorEstudianteCallPdf {
+  Future<List<int>> fetchReportePorEstudiante(
+      String pNumeroDocumento,
+      int pCurso,
+      int pMateria,
+      String pRango1,
+      String pRango2,
+      String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/reporteEstudiantePDF?pNumeroDocumento=$pNumeroDocumento&pMateria=$pMateria&pCurso=$pCurso&pRango1=$pRango1&pRango2=$pRango2&pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        // Verifica si la respuesta es un archivo PDF (en formato binario)
+        if (response.headers['content-type'] == 'application/pdf') {
+          // Devuelve los bytes del PDF
+          return response.bodyBytes;
+        } else {
+          print("La API no devolvió un archivo PDF");
+          return [];
+        }
+      } else {
+        print(
+            "Error al llamar a la API Rerporte. Código de estado: ${response.statusCode}");
+        print("Cuerpo de la respuesta: ${response.body}");
+        return [];
+      }
+    } catch (error) {
+      print("Error al llamar a la API: $error");
+      return [];
+    }
+  }
+}
+
+class ApiNotificationsCall {
+  Future<List<dynamic>> fetchNotifications() async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/notify/notifications/';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API notificaciones: $error");
+      return [];
+    }
+  }
+
+  Future<String> deleteNotifications(int pIdNotification) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/notify/notifications/$pIdNotification/';
+
+      final http.Response response = await http.delete(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the response body
+        Map<String, dynamic> responseData = json.decode(response.body);
+        // Extract the message from the response data
+        String message = responseData['msg'];
+        // Return the message
+        return message;
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return "Error al eliminar la observación.";
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al eliminar la notificacion API: $error");
+      return "Error al eliminar la notificación.";
+    }
+  }
+
+}
+
+class ApiInformationDocenteCall {
+  Future<List<dynamic>> fetchInformationTeacher(String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/profile/InformationDocente?pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API ifnormaction docente: $error");
+      return [];
+    }
+  }
+}
 /// End ApiArsac Group Code
 
 class ApiPagingParams {

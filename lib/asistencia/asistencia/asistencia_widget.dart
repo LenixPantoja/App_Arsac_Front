@@ -68,7 +68,7 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
   // 2.- Se obtiene el nombre del curso
   // 3.- Se toma el nombre del curso y se pasa el nombre del curso como parámetro al metodo @obtenerIdCurso(pCurso)
   //     para obtener el id del curso y pasarlo a la método @_fetchEstudiantesData(pMateria, pCurso)
- int obtenerIdCurso(String pCurso) {
+  int obtenerIdCurso(String pCurso) {
     int idCurso = 0;
     for (int i = 0; i < listaCursosDocente.length; i++) {
       String cursoMateria = listaCursosDocente[i]["nombre_curso"] +
@@ -81,7 +81,6 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
     }
     return idCurso;
   }
-
 
 // Método para obtener el id del materia dado el nombre de la materia
   // @ Proceso:
@@ -169,7 +168,6 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-              
                       Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             0.0, 12.0, 0.0, 0.0),
@@ -198,14 +196,15 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                         _model.dropDownValueController3 ??=
                                             FormFieldController<String>(null),
                                     options: listaCursosDocente
-                                                .map<String>((curso) =>
-                                                   curso["nombre_curso"]+ ' | '+curso["materia"]
-                                                        as String)
-                                                .toList(),
-                                            onChanged: (String? val) {
-                                              setState(() =>
-                                                  _model.dropDownValue1 = val);
-                                              cursoSeleccionado = val!;
+                                        .map<String>((curso) =>
+                                            curso["nombre_curso"] +
+                                                ' | ' +
+                                                curso["materia"] as String)
+                                        .toList(),
+                                    onChanged: (String? val) {
+                                      setState(
+                                          () => _model.dropDownValue1 = val);
+                                      cursoSeleccionado = val!;
                                     },
                                     width: 292.0,
                                     height: 43.0,
@@ -405,9 +404,9 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                       ) ??
                                                       false;
                                               if (confirmDialogResponse) {
-                                                int miMatricula =
-                                                    estudianteMC["id_Matricula"];
-
+                                                int miMatricula = estudianteMC[
+                                                    "id"];
+                                                  print("Pasa pot aqui");
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute<Null>(
                                                         builder: (BuildContext
@@ -499,9 +498,11 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                               String
                                                                   descripcion =
                                                                   "EL ESTUDIANTE NO ASISTIO A CLASES";
-                                                              int idMatricula =estudianteMC["id"];
+                                                              int idMatricula =
+                                                                  estudianteMC[
+                                                                      "id"];
                                                               Null soporte;
-                                                             
+
                                                               _model.apiResultnmd = await ApiArsacGroup.apiAsistenciaEstudianteCall.callAsistencia(
                                                                   tipoAsistencia:
                                                                       tipoAsistencia,
@@ -562,12 +563,20 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
+                                              /* _model.scanner =
+                                                  await FlutterBarcodeScanner
+                                                      .scanBarcode(
+                                                '#007D2D', // scanning line color
+                                                'Cancel', // cancel button text
+                                                true, // whether to show the flash icon
+                                                ScanMode.QR,
+                                              ); */
                                               String tipoAsistencia =
                                                   "PRESENTE";
                                               String descripcion = "NINGUNA";
                                               int id_matricula =
                                                   estudianteMC["id"];
-                                                  print(estudianteMC["id"]);
+                                              print(estudianteMC["id"]);
                                               Null soporte = null;
 
                                               _model.apiResultnmd =
@@ -594,20 +603,19 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                   builder:
                                                       (alertDialogContext) {
                                                     return AlertDialog(
-                                                      title: const Text(
-                                                          'CORRECTO'),
-                                                      content: Text(
-                                                          'Se registró la asistencia del estudiante ${estudianteMC["Nombre_Estudiante"]}'),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.pop(
-                                                                  alertDialogContext),
-                                                          child:
-                                                              const Text('Ok'),
-                                                        ),
-                                                      ],
-                                                    );
+                                                        title: const Text(
+                                                            'CORRECTO'),
+                                                        content: Text(
+                                                            'Se registró la asistencia del estudiante ${estudianteMC["Nombre_Estudiante"]}'),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    alertDialogContext),
+                                                            child: const Text(
+                                                                'Ok'),
+                                                          ),
+                                                        ]);
                                                   },
                                                 );
                                               } else {
