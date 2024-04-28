@@ -721,18 +721,28 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
                                                                 GestureDetector(
                                                                   onTap:
                                                                       () async {
-                                                                    int miIdObservacion = item['id'];
-                                                                    int miAsistencia = item['id_asistencia'];
-                                                                    String miDescripcion = item['Descripcion'];
+                                                                    int miIdObservacion =
+                                                                        item[
+                                                                            'id'];
+                                                                    int miAsistencia =
+                                                                        item[
+                                                                            'id_asistencia'];
+                                                                    String
+                                                                        miDescripcion =
+                                                                        item[
+                                                                            'Descripcion'];
                                                                     Navigator.of(
                                                                             context)
                                                                         .push(MaterialPageRoute<Null>(builder:
                                                                             (BuildContext
                                                                                 context) {
                                                                       return EditarObservacionWidget(
-                                                                          miIdObservacion: miIdObservacion,
-                                                                          miAsistencia : miAsistencia,
-                                                                          miDescripcion: miDescripcion);
+                                                                          miIdObservacion:
+                                                                              miIdObservacion,
+                                                                          miAsistencia:
+                                                                              miAsistencia,
+                                                                          miDescripcion:
+                                                                              miDescripcion);
                                                                     }));
                                                                   },
                                                                   child: Image
@@ -768,6 +778,16 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
                                                                                         int id_observacion = item["id"];
                                                                                         eliminarObservacion(id_observacion);
                                                                                         Navigator.pop(alertDialogContext, true);
+
+                                                                                        setState(() {
+                                                                                          int idEstudiante = obtenerIdEstudiante(estudianteSeleccionado);
+                                                                                          int idMateria = obtenerIdMateria(materiaSeleccionada);
+                                                                                          int idCurso = obtenerIdCurso(cursoSeleccionado);
+
+                                                                                          ApiObservacionesEstudianteCall miApi = ApiObservacionesEstudianteCall();
+                                                                                          List<dynamic> data = miApi.getObservaciones(idEstudiante, idMateria, idCurso) as List;
+                                                                                          listaObservacionesEstudiante = data;
+                                                                                        });
                                                                                       },
                                                                                       child: const Text('Confirmar'),
                                                                                     ),

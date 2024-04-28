@@ -1,6 +1,8 @@
 import '/componentes/menu/menu_widget.dart';
+import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'barra_busqueda_model.dart';
@@ -22,9 +24,6 @@ class _BarraBusquedaWidgetState extends State<BarraBusquedaWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => BarraBusquedaModel());
-
-    _model.textController ??= TextEditingController();
-    _model.textFieldFocusNode ??= FocusNode();
   }
 
   @override
@@ -107,87 +106,154 @@ class _BarraBusquedaWidgetState extends State<BarraBusquedaWidget> {
                           Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Align(
-                                alignment: const AlignmentDirectional(-1.0, 0.0),
-                                child: Icon(
-                                  Icons.search,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 30.0,
-                                ),
-                              ),
-                              Flexible(
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      8.0, 0.0, 8.0, 0.0),
-                                  child: TextFormField(
-                                    controller: _model.textController,
-                                    focusNode: _model.textFieldFocusNode,
-                                    autofocus: true,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'Readex Pro',
-                                            letterSpacing: 0.0,
-                                            fontStyle: FontStyle.italic,
+                              FlutterFlowDropDown<String>(
+                                controller: _model.dropDownValueController ??=
+                                    FormFieldController<String>(null),
+                                options: const [
+                                  'Ver mi Horario',
+                                  'Crear Observación',
+                                  'Registrar Asistencia',
+                                  'Descargar Reporte Diario',
+                                  'Descargar Reporte por Curso',
+                                  'Descargar Reporte por Estudiante'
+                                ],
+                                onChanged: (String? val) {
+                                  if (val == 'Ver mi Horario') {
+                                    context.pushNamed('Horario',
+                                        extra: <String, dynamic>{
+                                          kTransitionInfoKey:
+                                              const TransitionInfo(
+                                            hasTransition: true,
+                                            transitionType:
+                                                PageTransitionType.bottomToTop,
+                                            duration:
+                                                Duration(milliseconds: 300),
                                           ),
-                                      hintText: 'Buscar',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'Readex Pro',
-                                            letterSpacing: 0.0,
-                                          ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                      ),
-                                      errorBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                      ),
-                                      focusedErrorBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                      ),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
+                                        });
+                                  } else {
+                                    if (val == 'Crear Observación') {
+                                      context.pushNamed('CrearObservaciones',
+                                          extra: <String, dynamic>{
+                                            kTransitionInfoKey:
+                                                const TransitionInfo(
+                                              hasTransition: true,
+                                              transitionType: PageTransitionType
+                                                  .bottomToTop,
+                                              duration:
+                                                  Duration(milliseconds: 300),
+                                            ),
+                                          });
+                                    } else {
+                                      if (val == 'Registrar Asistencia') {
+                                        context.pushNamed('Asistencia',
+                                            extra: <String, dynamic>{
+                                              kTransitionInfoKey:
+                                                  const TransitionInfo(
+                                                hasTransition: true,
+                                                transitionType:
+                                                    PageTransitionType
+                                                        .bottomToTop,
+                                                duration:
+                                                    Duration(milliseconds: 300),
+                                              ),
+                                            });
+                                      } else {
+                                        if (val == 'Descargar Reporte Diario') {
+                                          context.pushNamed('ReporteDiario',
+                                              extra: <String, dynamic>{
+                                                kTransitionInfoKey:
+                                                    const TransitionInfo(
+                                                  hasTransition: true,
+                                                  transitionType:
+                                                      PageTransitionType
+                                                          .bottomToTop,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                ),
+                                              });
+                                        }else{
+                                          if (val == 'Descargar Reporte por Curso') {
+                                          context.pushNamed('ReportePorFecha',
+                                              extra: <String, dynamic>{
+                                                kTransitionInfoKey:
+                                                    const TransitionInfo(
+                                                  hasTransition: true,
+                                                  transitionType:
+                                                      PageTransitionType
+                                                          .bottomToTop,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                ),
+                                              });
+                                        }else{
+                                          if (val == 'Descargar Reporte por Estudiante') {
+                                          context.pushNamed('ReportePorEstudiante',
+                                              extra: <String, dynamic>{
+                                                kTransitionInfoKey:
+                                                    const TransitionInfo(
+                                                  hasTransition: true,
+                                                  transitionType:
+                                                      PageTransitionType
+                                                          .bottomToTop,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                ),
+                                              });
+                                        }
+                                        }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                width: 356.0,
+                                height: 56.0,
+                                searchHintTextStyle:
+                                    FlutterFlowTheme.of(context)
+                                        .labelMedium
                                         .override(
                                           fontFamily: 'Readex Pro',
                                           letterSpacing: 0.0,
                                         ),
-                                    maxLines: null,
-                                    validator: _model.textControllerValidator
-                                        .asValidator(context),
-                                  ),
+                                searchTextStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Readex Pro',
+                                      letterSpacing: 0.0,
+                                    ),
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Readex Pro',
+                                      letterSpacing: 0.0,
+                                    ),
+                                hintText: 'Mis opciones...',
+                                searchHintText: 'Search for an item...',
+                                icon: const Icon(
+                                  Icons.saved_search_sharp,
+                                  color: Color(0xFF5889F9),
+                                  size: 35.0,
                                 ),
+                                fillColor: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                                elevation: 2.0,
+                                borderColor:
+                                    FlutterFlowTheme.of(context).alternate,
+                                borderWidth: 2.0,
+                                borderRadius: 8.0,
+                                margin: const EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 16.0, 0.0),
+                                hidesUnderline: true,
+                                isOverButton: true,
+                                isSearchable: true,
+                                isMultiSelect: false,
+                                labelText: 'Buscar',
+                                labelTextStyle: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      fontFamily: 'Readex Pro',
+                                      letterSpacing: 0.0,
+                                    ),
                               ),
                             ],
                           ),
