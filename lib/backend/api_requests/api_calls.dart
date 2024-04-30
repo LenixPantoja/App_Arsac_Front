@@ -154,6 +154,73 @@ class ApiMateriasPorDocenteCall {
   }
 }
 
+class ApiMateriasPorEstudianteCall {
+  Future<List<dynamic>> fetchMaterias() async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/MateriasEstudiantes/?pUser=$username';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API materias por Docente: $error");
+      return [];
+    }
+  }
+}
+class ApiCursosEstudiantesCall {
+  Future<List<dynamic>> fetchCursos() async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/crearCursoEstudiante/?pUser=$username';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API materias por Estudiante: $error");
+      return [];
+    }
+  }
+}
+
 class ApiCursoCall {
   Future<List<dynamic>> fetchCursos() async {
     try {
@@ -279,6 +346,41 @@ class ApiAsistenciaEstudianteCall {
       print("pMateria: $pMateria");
       print("pCurso: $pCurso");
 
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          print(response.body);
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          print("lista vacia");
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API asistencia estudiante: $error");
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getListaAsistenciaDocente(
+      String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/AsistenciaEstudiante/?pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      
       if (response.statusCode == 200) {
         // Check if the response body is not empty
         if (response.body.isNotEmpty) {
@@ -804,6 +906,118 @@ class ApiInformationDocenteCall {
     }
   }
 }
+
+
+class ApiHorarioEstudianteCall {
+  Future<List<dynamic>> fetchHorarioEstudiante(String pUser) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/HorarioEstudiante/?pUser=$pUser';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API HORARIO ESTUDIANTE $error");
+      return [];
+    }
+  }
+}
+
+class ApiConsultarAsistenciaEstudianteCall {
+  Future<List<dynamic>> fetchConsultaAsistEstudiante(String pUser, int pMateria, int pCurso) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/ConsultarAsistenciaEstudiante/?pUser=$pUser&pIdMateria=$pMateria&pIdCurso=$pCurso';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+        print(pUser);
+        print("mater:$pMateria");
+        print("Curso: $pCurso");
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API HORARIO ESTUDIANTE $error");
+      return [];
+    }
+  }
+}
+
+class ApiConsultarObservacionesEstudianteCall {
+  Future<List<dynamic>> fetchConsultaObserEstudiante(String pUser, int pMateria, int pCurso) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/api/ConsultarObservacionesEstudiante/?pUser=$pUser&pIdMateria=$pMateria&pIdCurso=$pCurso';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+        print(pUser);
+        print("mater:$pMateria");
+        print("Curso: $pCurso");
+
+      if (response.statusCode == 200) {
+        // Check if the response body is not empty
+        if (response.body.isNotEmpty) {
+          List<dynamic> jsonData = json.decode(response.body);
+          return jsonData;
+        } else {
+          // Return an empty list if the response body is empty
+          return [];
+        }
+      } else {
+        // Handle non-200 status codes
+        print(
+            "Error al llamar a la API. Código de estado: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      // Handle other exceptions
+      print("Error al llamar a la API HORARIO ESTUDIANTE $error");
+      return [];
+    }
+  }
+}
+
+
+
 /// End ApiArsac Group Code
 
 class ApiPagingParams {
