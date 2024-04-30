@@ -132,9 +132,7 @@ class _HorarioWidgetState extends State<HorarioWidget> {
   @override
   void initState() {
     super.initState();
-
     Usuario dataUser = Usuario();
-
     _fetchHorarioDocente(dataUser.nombreUsuario);
     _model = createModel(context, () => HorarioModel());
   }

@@ -232,41 +232,115 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            0.0, 12.0, 0.0, 12.0),
-                        child: FFButtonWidget(
-                          onPressed: () {
-                            int idCurso = obtenerIdCurso(cursoSeleccionado);
-                            int idMateria =
-                                obtenerIdMateria(materiaSeleccionada);
+                      Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 12.0, 0.0, 12.0),
+                              child: FFButtonWidget(
+                                onPressed: () {
+                                  int idCurso =
+                                      obtenerIdCurso(cursoSeleccionado);
+                                  int idMateria =
+                                      obtenerIdMateria(materiaSeleccionada);
 
-                            _fetchEstudiantesData(idMateria, idCurso);
-                          },
-                          text: 'Generar',
-                          options: FFButtonOptions(
-                            height: 40.0,
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                24.0, 0.0, 24.0, 0.0),
-                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: const Color(0xFF57E84E),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  _fetchEstudiantesData(idMateria, idCurso);
+                                },
+                                text: 'Generar',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  iconPadding:
+                                      const EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 0.0),
+                                  color: const Color(0xFF57E84E),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Readex Pro',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                  elevation: 3.0,
+                                  borderSide: const BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                            elevation: 3.0,
-                            borderSide: const BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 12.0, 0.0, 12.0),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  // Mostrar el AlertDialog
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("¡ Mensaje !"),
+                                        content: Text(
+                                            "Para visualizar de forma completa los datos, se recomienda colocar el dispositivo en horizontal."),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+
+                                              // Redirigir a la pantalla 'ListadoAsistencia' después de cerrar el AlertDialog
+                                              context.pushNamed(
+                                                'ListadoAsistencia',
+                                                extra: <String, dynamic>{
+                                                  kTransitionInfoKey:
+                                                      const TransitionInfo(
+                                                    hasTransition: true,
+                                                    transitionType:
+                                                        PageTransitionType
+                                                            .bottomToTop,
+                                                    duration: Duration(
+                                                        milliseconds: 300),
+                                                  ),
+                                                },
+                                              );
+                                            },
+                                            child: Text("Aceptar"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                text: 'Listado',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  iconPadding:
+                                      const EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 0.0),
+                                  color: const Color(0xFF4E7FE8),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Readex Pro',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        letterSpacing: 0.0,
+                                      ),
+                                  elevation: 3.0,
+                                  borderSide: const BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
+                          ]),
                       Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             0.0, 12.0, 0.0, 12.0),
@@ -404,9 +478,9 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                       ) ??
                                                       false;
                                               if (confirmDialogResponse) {
-                                                int miMatricula = estudianteMC[
-                                                    "id"];
-                                                  print("Pasa pot aqui");
+                                                int miMatricula =
+                                                    estudianteMC["id"];
+                                                print("Pasa pot aqui");
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute<Null>(
                                                         builder: (BuildContext
@@ -563,14 +637,14 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              /* _model.scanner =
+                                              _model.scanner =
                                                   await FlutterBarcodeScanner
                                                       .scanBarcode(
                                                 '#007D2D', // scanning line color
                                                 'Cancel', // cancel button text
                                                 true, // whether to show the flash icon
                                                 ScanMode.QR,
-                                              ); */
+                                              );
                                               String tipoAsistencia =
                                                   "PRESENTE";
                                               String descripcion = "NINGUNA";

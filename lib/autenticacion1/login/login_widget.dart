@@ -17,10 +17,24 @@ class _LoginWidgetState extends State<LoginWidget> {
   late LoginModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String user = "";
+  String isSuper = "";
+  Future<void> _fetchUserData() async {
+    // Crea una instancia de la clase ApiGetUserCall
+    ApiGetUserCall apiCall = ApiGetUserCall();
+    // Llama a la función para obtener los datos del usuario
+    Map<String, dynamic> data = await apiCall.fetchUsername();
+    setState(() {
+      user = data["full_name"];
+      isSuper = data["is_superuser"].toString();
+      print(isSuper);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    
     _model = createModel(context, () => LoginModel());
 
     _model.txtUsuarioController ??= TextEditingController();
@@ -40,363 +54,417 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        // Si deseas desactivar el botón de retroceso, puedes devolver false aquí
-        return false;
-      },
-     child: Scaffold(
-      key: scaffoldKey,
-      backgroundColor: const Color(0xFFFAD02C),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          color: Color(0xFFFAD02C),
-        ),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 70.0, 0.0, 0.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Material(
-                  color: Colors.transparent,
-                  elevation: 14.0,
-                  shape: const CircleBorder(),
-                  child: Container(
-                    width: 350.0,
-                    height: 350.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                    ),
-                    child: Align(
-                      alignment: const AlignmentDirectional(0.0, 0.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(120.0),
-                        child: Image.asset(
-                          'assets/images/Logo_Arsac.png',
-                          width: 300.0,
-                          height: 300.0,
-                          fit: BoxFit.cover,
+        onWillPop: () async {
+          // Si deseas desactivar el botón de retroceso, puedes devolver false aquí
+          return false;
+        },
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: const Color(0xFFFAD02C),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFAD02C),
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(0.0, 70.0, 0.0, 0.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      elevation: 14.0,
+                      shape: const CircleBorder(),
+                      child: Container(
+                        width: 350.0,
+                        height: 350.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: Align(
+                          alignment: const AlignmentDirectional(0.0, 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(120.0),
+                            child: Image.asset(
+                              'assets/images/Logo_Arsac.png',
+                              width: 300.0,
+                              height: 300.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
-                  child: Material(
-                    color: Colors.transparent,
-                    elevation: 30.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Container(
-                      width: 350.0,
-                      height: 314.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).info,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Align(
-                        alignment: const AlignmentDirectional(0.0, 0.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              '¡Bienvenido!🤓',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Roboto',
-                                    color: Colors.black,
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 40.0, 8.0, 0.0),
-                              child: TextFormField(
-                                controller: _model.txtUsuarioController,
-                                focusNode: _model.txtUsuarioFocusNode,
-                                autofocus: true,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  labelText: 'USUARIO',
-                                  labelStyle: FlutterFlowTheme.of(context)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 50.0, 0.0, 0.0),
+                      child: Material(
+                        color: Colors.transparent,
+                        elevation: 30.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Container(
+                          width: 350.0,
+                          height: 314.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context).info,
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Align(
+                            alignment: const AlignmentDirectional(0.0, 0.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '¡Bienvenido!🤓',
+                                  style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'Readex Pro',
+                                        fontFamily: 'Roboto',
                                         color: Colors.black,
-                                        fontWeight: FontWeight.w800,
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.w900,
                                       ),
-                                  hintStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Readex Pro',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 40.0, 8.0, 0.0),
+                                  child: TextFormField(
+                                    controller: _model.txtUsuarioController,
+                                    focusNode: _model.txtUsuarioFocusNode,
+                                    autofocus: true,
+                                    obscureText: false,
+                                    decoration: InputDecoration(
+                                      labelText: 'USUARIO',
+                                      labelStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                      hintStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
                                       ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .error,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .error,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      prefixIcon: const Icon(
+                                        Icons.person,
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).error,
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.person,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Roboto',
+                                          color: Colors.black,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                    textAlign: TextAlign.start,
+                                    validator: _model
+                                        .txtUsuarioControllerValidator
+                                        .asValidator(context),
                                   ),
                                 ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Roboto',
-                                      color: Colors.black,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                textAlign: TextAlign.start,
-                                validator: _model.txtUsuarioControllerValidator
-                                    .asValidator(context),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 30.0, 8.0, 0.0),
-                              child: TextFormField(
-                                controller: _model.txtContrasenaController,
-                                focusNode: _model.txtContrasenaFocusNode,
-                                autofocus: true,
-                                obscureText: !_model.txtContrasenaVisibility,
-                                decoration: InputDecoration(
-                                  labelText: 'CONTRASEÑA',
-                                  labelStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Readex Pro',
-                                        color: Colors.black,
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                  hintStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Readex Pro',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFFB091A),
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFFB091A),
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.lock,
-                                    size: 15.0,
-                                  ),
-                                  suffixIcon: InkWell(
-                                    onTap: () => setState(
-                                      () => _model.txtContrasenaVisibility =
-                                          !_model.txtContrasenaVisibility,
-                                    ),
-                                    focusNode: FocusNode(skipTraversal: true),
-                                    child: Icon(
-                                      _model.txtContrasenaVisibility
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
-                                      color: Colors.black,
-                                      size: 22,
-                                    ),
-                                  ),
-                                ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                textAlign: TextAlign.start,
-                                cursorColor: Colors.black,
-                                validator: _model
-                                    .txtContrasenaControllerValidator
-                                    .asValidator(context),
-                              ),
-                            ),
-                            Align(
-                              alignment: const AlignmentDirectional(0.0, 1.0),
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 12.0, 0.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Flexible(
-                                      child: Align(
-                                        alignment:
-                                            const AlignmentDirectional(0.0, -1.0),
-                                        child: FFButtonWidget(
-                                          onPressed: () async {
-                                            _model.apiResultnmd =
-                                                await ApiArsacGroup.apiLoginCall
-                                                    .call(
-                                              username: _model
-                                                  .txtUsuarioController.text,
-                                              password: _model
-                                                  .txtContrasenaController.text,
-                                            );
-                                            if ((_model
-                                                    .apiResultnmd?.succeeded ??
-                                                true)) {
-                                              context.pushNamed(
-                                                'Inicio',
-                                                extra: <String, dynamic>{
-                                                  kTransitionInfoKey:
-                                                      const TransitionInfo(
-                                                    hasTransition: true,
-                                                    transitionType:
-                                                        PageTransitionType
-                                                            .bottomToTop,
-                                                    duration: Duration(
-                                                        milliseconds: 300),
-                                                  ),
-                                                },
-                                              );
-                                            } else {
-                                              await showDialog(
-                                                context: context,
-                                                builder: (alertDialogContext) {
-                                                  return AlertDialog(
-                                                    title: const Text('Error'),
-                                                    content: const Text(
-                                                        'Usuario o Contraseña es incorrecto verifique y vuelva a intentarlo'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                                alertDialogContext),
-                                                        child: const Text('Ok'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            }
-
-                                            setState(() {});
-                                          },
-                                          text: 'Iniciar sesión',
-                                          icon: const Icon(
-                                            Icons.login_rounded,
-                                            color: Color(0xFF060606),
-                                            size: 15.0,
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      8.0, 30.0, 8.0, 0.0),
+                                  child: TextFormField(
+                                    controller: _model.txtContrasenaController,
+                                    focusNode: _model.txtContrasenaFocusNode,
+                                    autofocus: true,
+                                    obscureText:
+                                        !_model.txtContrasenaVisibility,
+                                    decoration: InputDecoration(
+                                      labelText: 'CONTRASEÑA',
+                                      labelStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: Colors.black,
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w800,
                                           ),
-                                          options: FFButtonOptions(
-                                            height: 40.0,
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    24.0, 0.0, 24.0, 0.0),
-                                            iconPadding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: const Color(0xFFFAD02C),
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleSmall
-                                                    .override(
-                                                      fontFamily: 'Readex Pro',
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                    ),
-                                            elevation: 15.0,
-                                            borderSide: const BorderSide(
-                                              color: Colors.transparent,
-                                              width: 2.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(50.0),
-                                            hoverColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryBackground,
-                                            hoverBorderSide: const BorderSide(
-                                              color: Colors.black,
-                                              width: 2.0,
-                                            ),
-                                            hoverTextColor: Colors.black,
+                                      hintStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
                                           ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Color(0xFFFB091A),
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                          color: Color(0xFFFB091A),
+                                          width: 2.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      prefixIcon: const Icon(
+                                        Icons.lock,
+                                        size: 15.0,
+                                      ),
+                                      suffixIcon: InkWell(
+                                        onTap: () => setState(
+                                          () => _model.txtContrasenaVisibility =
+                                              !_model.txtContrasenaVisibility,
+                                        ),
+                                        focusNode:
+                                            FocusNode(skipTraversal: true),
+                                        child: Icon(
+                                          _model.txtContrasenaVisibility
+                                              ? Icons.visibility_outlined
+                                              : Icons.visibility_off_outlined,
+                                          color: Colors.black,
+                                          size: 22,
                                         ),
                                       ),
                                     ),
-                                  ],
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                    textAlign: TextAlign.start,
+                                    cursorColor: Colors.black,
+                                    validator: _model
+                                        .txtContrasenaControllerValidator
+                                        .asValidator(context),
+                                  ),
                                 ),
-                              ),
+                                Align(
+                                  alignment:
+                                      const AlignmentDirectional(0.0, 1.0),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 12.0, 0.0, 0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Flexible(
+                                          child: Align(
+                                            alignment:
+                                                const AlignmentDirectional(
+                                                    0.0, -1.0),
+                                            child: FFButtonWidget(
+                                              onPressed: () async {
+                                                _model.apiResultnmd =
+                                                    await ApiArsacGroup
+                                                        .apiLoginCall
+                                                        .call(
+                                                  username: _model
+                                                      .txtUsuarioController
+                                                      .text,
+                                                  password: _model
+                                                      .txtContrasenaController
+                                                      .text,
+                                                );
+                                                if ((_model.apiResultnmd
+                                                        ?.succeeded ??
+                                                    true)) {
+                                                      _fetchUserData();
+                                                      await Future.delayed(const Duration(seconds: 2));
+                                                  if (isSuper == 'true') {
+                                                    context.pushNamed(
+                                                      'Inicio',
+                                                      extra: <String, dynamic>{
+                                                        kTransitionInfoKey:
+                                                            const TransitionInfo(
+                                                          hasTransition: true,
+                                                          transitionType:
+                                                              PageTransitionType
+                                                                  .bottomToTop,
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  300),
+                                                        ),
+                                                      },
+                                                    );
+                                                  } else {
+                                                    if (isSuper == 'false') {
+                                                      context.pushNamed(
+                                                        'InicioEstudiante',
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          kTransitionInfoKey:
+                                                              const TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .bottomToTop,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                          ),
+                                                        },
+                                                      );
+                                                    }
+                                                  }
+                                                } else {
+                                                  await showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (alertDialogContext) {
+                                                      return AlertDialog(
+                                                        title:
+                                                            const Text('Error'),
+                                                        content: const Text(
+                                                            'Usuario o Contraseña es incorrecto verifique y vuelva a intentarlo'),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    alertDialogContext),
+                                                            child: const Text(
+                                                                'Ok'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }
+
+                                                setState(() {});
+                                              },
+                                              text: 'Iniciar sesión',
+                                              icon: const Icon(
+                                                Icons.login_rounded,
+                                                color: Color(0xFF060606),
+                                                size: 15.0,
+                                              ),
+                                              options: FFButtonOptions(
+                                                height: 40.0,
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        24.0, 0.0, 24.0, 0.0),
+                                                iconPadding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        0.0, 0.0, 0.0, 0.0),
+                                                color: const Color(0xFFFAD02C),
+                                                textStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmall
+                                                        .override(
+                                                          fontFamily:
+                                                              'Readex Pro',
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                elevation: 15.0,
+                                                borderSide: const BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 2.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                                hoverColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                hoverBorderSide:
+                                                    const BorderSide(
+                                                  color: Colors.black,
+                                                  width: 2.0,
+                                                ),
+                                                hoverTextColor: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }

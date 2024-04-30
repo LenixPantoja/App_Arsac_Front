@@ -1,5 +1,12 @@
 import 'dart:async';
 
+import 'package:arsac_app/asistencia/listado_asistencia/listado_asistencia_widget.dart';
+import 'package:arsac_app/modulo_estudiante/asistencia_estudiante/asistencia_estudiantes/asistencia_estudiantes_widget.dart';
+import 'package:arsac_app/modulo_estudiante/horario_estudiante/horario_estudiante/horario_estudiante_widget.dart';
+import 'package:arsac_app/modulo_estudiante/inicio_estudiante/inicio_estudiante/inicio_estudiante_widget.dart';
+import 'package:arsac_app/modulo_estudiante/notificaciones_estudiante/notificaciones_estudiante/notificaciones_estudiante_widget.dart';
+import 'package:arsac_app/modulo_estudiante/observaciones_estudiante/observaciones_estudiante/observaciones_estudiante_widget.dart';
+import 'package:arsac_app/modulo_estudiante/profile_estudiante/profile_estudiante/profile_estudiante_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -167,6 +174,41 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'Estudiante',
           path: '/estudiante',
           builder: (context, params) => const EstudianteWidget(),
+        ),
+        FFRoute(
+          name: 'InicioEstudiante',
+          path: '/inicioEstudiante',
+          builder: (context, params) => const InicioEstudianteWidget(),
+        ),
+        FFRoute(
+          name: 'HorarioEstudiante',
+          path: '/horarioEstudiante',
+          builder: (context, params) => const HorarioEstudianteWidget(),
+        ),
+        FFRoute(
+          name: 'AsistenciaEstudiantes',
+          path: '/asistenciaEstudiantes',
+          builder: (context, params) => const AsistenciaEstudiantesWidget(),
+        ),
+        FFRoute(
+          name: 'ObservacionesEstudiante',
+          path: '/observacionesEstudiante',
+          builder: (context, params) => const ObservacionesEstudianteWidget(),
+        ),
+        FFRoute(
+          name: 'profileEstudiante',
+          path: '/profileEstudiante',
+          builder: (context, params) => const ProfileEstudianteWidget(),
+        ),
+        FFRoute(
+          name: 'NotificacionesEstudiante',
+          path: '/notificacionesEstudiante',
+          builder: (context, params) => const NotificacionesEstudianteWidget(),
+        ),
+        FFRoute(
+          name: 'ListadoAsistencia',
+          path: '/listadoAsistencia',
+          builder: (context, params) => const ListadoAsistenciaWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

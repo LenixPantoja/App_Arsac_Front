@@ -138,7 +138,7 @@ class _CrearObservacionesWidgetState extends State<CrearObservacionesWidget> {
     for (int i = 0; i < listaAsistenciaEstudiante.length; i++) {
       String nombreAsistencia = listaAsistenciaEstudiante[i]['id'].toString() +
           ' ' +
-          listaAsistenciaEstudiante[i]['Tipo_asistencia'];
+          listaAsistenciaEstudiante[i]['Tipo_asistencia']+" | "+ listaAsistenciaEstudiante[i]['Hora_llegada'];
       dataTipoAsistencia = listaAsistenciaEstudiante[i]['Tipo_asistencia'];
       dataHoraLlegada = listaAsistenciaEstudiante[i]['Hora_llegada'];
       dataMateria = listaAsistenciaEstudiante[i]['Materia'];
@@ -357,7 +357,7 @@ class _CrearObservacionesWidgetState extends State<CrearObservacionesWidget> {
                                 .map<String>((asistencia) =>
                                     asistencia['id'].toString() +
                                         ' ' +
-                                        asistencia['Tipo_asistencia'] as String)
+                                        asistencia['Tipo_asistencia'] +" | "+ asistencia['Hora_llegada'] as String)
                                 .toList(),
                             onChanged: (String? val) {
                               setState(() => _model.dropDownValue4 = val);
