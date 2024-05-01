@@ -5,6 +5,8 @@ import '/modulo_estudiante/submenu_estudiantes/menu_estudiantes/menu_estudiantes
 import 'package:flutter/material.dart';
 import 'profile_estudiante_model.dart';
 export 'profile_estudiante_model.dart';
+import '/backend/api_requests/api_calls.dart';
+
 
 class ProfileEstudianteWidget extends StatefulWidget {
   const ProfileEstudianteWidget({super.key});
@@ -15,6 +17,43 @@ class ProfileEstudianteWidget extends StatefulWidget {
 }
 
 class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
+   String fullname = "";
+  String username = "";
+  int edad = 0;
+  String profesion = "";
+  String documento = "";
+  List<dynamic> informacionPerfilDocente = [];
+
+  Future<void> _fetchUserData() async {
+    // Crea una instancia de la clase ApiGetUserCall
+    ApiGetUserCall apiCall = ApiGetUserCall();
+    // Llama a la función para obtener los datos del usuario
+    Map<String, dynamic> data = await apiCall.fetchUsername();
+    setState(() {
+      fullname = data["full_name"];
+    });
+  }
+
+  Future<void> _fetchInformationDocente(String pUser) async {
+    ApiInformationDocenteCall apiCall = ApiInformationDocenteCall();
+    // Call the function to fetch subject data
+    List<dynamic> data = await apiCall.fetchInformationTeacher(pUser);
+    setState(() {
+      informacionPerfilDocente = data;
+      for (int i = 0; i < data.length; i++) {
+        profesion = data[i]['Profesion'];
+        edad = data[i]['Edad'];
+        documento = data[i]['Identificacion'];
+
+        print(profesion);
+        print(edad);
+        print(documento);
+
+
+      }
+    });
+  }
+
   late ProfileEstudianteModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -22,6 +61,8 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
+    _fetchInformationDocente(username);
     _model = createModel(context, () => ProfileEstudianteModel());
   }
 
@@ -141,7 +182,7 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
                           Align(
                             alignment: const AlignmentDirectional(0.0, 0.0),
                             child: Text(
-                              'Ronal Esteban Figueroa Mora',
+                              fullname,
                               style: FlutterFlowTheme.of(context)
                                   .displaySmall
                                   .override(
@@ -187,7 +228,7 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
                                               ),
                                         ),
                                         Text(
-                                          'colocar usuario',
+                                          username,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -216,7 +257,7 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
                                               ),
                                         ),
                                         Text(
-                                          'COLCOAR EDAD',
+                                          edad.toString()+" años.",
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -245,7 +286,7 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
                                               ),
                                         ),
                                         Text(
-                                          'colcar cedula',
+                                          documento,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
