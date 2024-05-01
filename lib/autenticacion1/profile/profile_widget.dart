@@ -287,7 +287,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                               ),
                                         ),
                                         Text(
-                                          edad.toString(),
+                                          edad.toString()+" años.",
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
