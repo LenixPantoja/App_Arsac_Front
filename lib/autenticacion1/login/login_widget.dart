@@ -342,6 +342,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                                       _fetchUserData();
                                                       await Future.delayed(const Duration(seconds: 2));
                                                   if (isSuper == 'true') {
+                                                    print(isSuper);
                                                     context.pushNamed(
                                                       'Inicio',
                                                       extra: <String, dynamic>{
@@ -359,6 +360,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                                     );
                                                   } else {
                                                     if (isSuper == 'false') {
+                                                      print(isSuper);
                                                       context.pushNamed(
                                                         'InicioEstudiante',
                                                         extra: <String,

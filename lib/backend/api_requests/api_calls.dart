@@ -43,7 +43,7 @@ class matricula {
 }
 
 class ApiArsacGroup {
-  static String baseUrl = 'https://06e8-8-242-169-8.ngrok-free.app/';
+  static String baseUrl = 'https://b087-38-51-243-37.ngrok-free.app/';
   static Map<String, String> headers = {};
   static ApiLoginCall apiLoginCall = ApiLoginCall();
   static ApiGetUserCall apiGetUserCall = ApiGetUserCall();
