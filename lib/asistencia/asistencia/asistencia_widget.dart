@@ -98,6 +98,17 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
     return idMateria;
   }
 
+  bool esValido(int pIdEstudiante, String pDocumento) {
+    bool valid = false;
+    for (int i = 0; i < listaEstudiantesMC.length; i++) {
+      if (listaEstudiantesMC[i]["id"] == pIdEstudiante &&
+          listaEstudiantesMC[i]["Identificacion_Estudiante"] == pDocumento) {
+        valid = true;
+      }
+    }
+    return valid;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -651,7 +662,60 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                               int id_matricula =
                                                   estudianteMC["id"];
                                               print(estudianteMC["id"]);
+
                                               Null soporte = null;
+                                              if (esValido(id_matricula,
+                                                  ScanMode.QR.toString())) {
+                                                print(
+                                                    "El estudiante selecciona y la cedula del QR son correctos");
+                                                await showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title:
+                                                          Text("¡ Mensaje !"),
+                                                      content: Text(
+                                                          "El estudiante selecciona y la cedula del QR son correctos"),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child:
+                                                              Text("Aceptar"),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                print(
+                                                    "El estudiante selecciona y la cedula del que NO SON CORRECTOS");
+                                                    await showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title:
+                                                          Text("¡ Mensaje !"),
+                                                      content: Text(
+                                                          "El estudiante selecciona y la cedula del que NO SON CORRECTOS"),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child:
+                                                              Text("Aceptar"),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
 
                                               _model.apiResultnmd =
                                                   await ApiArsacGroup
