@@ -61,6 +61,8 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
   @override
   void initState() {
     super.initState();
+     Usuario miUser = Usuario();
+    username = miUser.nombreUsuario;
     _fetchUserData();
     _fetchInformationDocente(username);
     _model = createModel(context, () => ProfileEstudianteModel());
@@ -142,14 +144,14 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
                                               const EdgeInsetsDirectional.fromSTEB(
                                                   0.0, 23.0, 0.0, 0.0),
                                           child: Container(
-                                            width: 89.0,
-                                            height: 117.0,
+                                            width: 200.0,
+                                            height: 200.0,
                                             decoration: BoxDecoration(
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .secondaryBackground,
                                               borderRadius:
-                                                  BorderRadius.circular(0.0),
+                                                  BorderRadius.circular(100.0),
                                               border: Border.all(
                                                 color:
                                                     FlutterFlowTheme.of(context)
@@ -161,9 +163,9 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
                                               padding: const EdgeInsets.all(2.0),
                                               child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(10.0),
+                                                    BorderRadius.circular(100.0),
                                                 child: Image.asset(
-                                                  'assets/images/img013-(1)-transformed.jpg',
+                                                  'assets/images/iconoPerfilEstudiante.png',
                                                   width: 64.0,
                                                   height: 64.0,
                                                   fit: BoxFit.scaleDown,
