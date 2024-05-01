@@ -877,7 +877,7 @@ class ApiInformationDocenteCall {
   Future<List<dynamic>> fetchInformationTeacher(String pUser) async {
     try {
       final String apiUrl =
-          '${ApiArsacGroup.baseUrl}/profile/InformationDocente?pUser=$pUser';
+          '${ApiArsacGroup.baseUrl}/profile/InformationProfile?pUser=$pUser';
 
       final http.Response response = await http.get(
         Uri.parse(apiUrl),
