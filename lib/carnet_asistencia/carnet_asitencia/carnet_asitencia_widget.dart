@@ -134,7 +134,7 @@ class _CarnetAsitenciaWidgetState extends State<CarnetAsitenciaWidget> {
                                   );
 
                                   setState(() {
-                                    print(_model.scanner);
+                                    print("CEDULA:${_model.scanner}");
                                   });
                                 },
                                 text: 'Scanear QR',

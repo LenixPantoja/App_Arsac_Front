@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class AsistenciaModel extends FlutterFlowModel<AsistenciaWidget> {
   ///  State fields for stateful widgets in this page.
-
+  var scanner = '';
   // State field(s) for DropDown widget.
   String? dropDownValue1;
   FormFieldController<String>? dropDownValueController1;
@@ -22,9 +22,6 @@ class AsistenciaModel extends FlutterFlowModel<AsistenciaWidget> {
   // Stores action output result for [Backend Call - API (ApiAsistenciaEstudiante)] action in Button widget.
   ApiCallResponse? apiResultnmd;
 
-  Object? get scanner => null;
-
-  set scanner(scanner) {}
 
   /// Initialization and disposal methods.
 

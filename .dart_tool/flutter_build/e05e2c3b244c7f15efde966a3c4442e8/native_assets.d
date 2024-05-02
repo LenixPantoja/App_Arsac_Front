@@ -1,1 +1,0 @@
- D:\\ESPACIO\ DE\ TRABAJO\ DESARROLLO\ SOFTWARE-20240201T123007Z-004\\ESPACIO\ DE\ TRABAJO\ DESARROLLO\ SOFTWARE\\ScriptsLinux\\ARSAC\\ArsacApp\\.dart_tool\\flutter_build\\e05e2c3b244c7f15efde966a3c4442e8\\native_assets.yaml: 

@@ -943,10 +943,10 @@ class ApiHorarioEstudianteCall {
 }
 
 class ApiConsultarAsistenciaEstudianteCall {
-  Future<List<dynamic>> fetchConsultaAsistEstudiante(String pUser, int pMateria, int pCurso) async {
+  Future<List<dynamic>> fetchConsultaAsistEstudiante(String pUser, int pMateria, int pCurso, String pRango1, String pRango2) async {
     try {
       final String apiUrl =
-          '${ApiArsacGroup.baseUrl}/api/ConsultarAsistenciaEstudiante/?pUser=$pUser&pIdMateria=$pMateria&pIdCurso=$pCurso';
+          '${ApiArsacGroup.baseUrl}/api/ConsultarAsistenciaEstudiante/?pUser=$pUser&pIdMateria=$pMateria&pIdCurso=$pCurso&pRango1=$pRango1&pRango2=$pRango2';
 
       final http.Response response = await http.get(
         Uri.parse(apiUrl),
@@ -980,10 +980,10 @@ class ApiConsultarAsistenciaEstudianteCall {
 }
 
 class ApiConsultarObservacionesEstudianteCall {
-  Future<List<dynamic>> fetchConsultaObserEstudiante(String pUser, int pMateria, int pCurso) async {
+  Future<List<dynamic>> fetchConsultaObserEstudiante(String pUser, int pMateria, int pCurso, String pRango1, String pRango2) async {
     try {
       final String apiUrl =
-          '${ApiArsacGroup.baseUrl}/api/ConsultarObservacionesEstudiante/?pUser=$pUser&pIdMateria=$pMateria&pIdCurso=$pCurso';
+          '${ApiArsacGroup.baseUrl}/api/ConsultarObservacionesEstudiante/?pUser=$pUser&pIdMateria=$pMateria&pIdCurso=$pCurso&pRango1=$pRango1&pRango2=$pRango2';
 
       final http.Response response = await http.get(
         Uri.parse(apiUrl),
@@ -1016,6 +1016,39 @@ class ApiConsultarObservacionesEstudianteCall {
   }
 }
 
+
+class ApiGraficasEstadisticasCallPdf {
+  Future<List<int>> fetchGraficas(
+      String pUser, String pTipoGrafica) async {
+    try {
+      final String apiUrl =
+          '${ApiArsacGroup.baseUrl}/grafica/dataGraficasEstadisticas?pUser=$pUser&pTipoGrafica=$pTipoGrafica';
+
+      final http.Response response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        // Verifica si la respuesta es un archivo PDF (en formato binario)
+        if (response.headers['content-type'] == 'application/pdf') {
+          // Devuelve los bytes del PDF
+          return response.bodyBytes;
+        } else {
+          print("La API no devolvió un archivo PDF");
+          return [];
+        }
+      } else {
+        print(
+            "Error al llamar a la API GRAFICAS. Código de estado: ${response.statusCode}");
+        print("Cuerpo de la respuesta: ${response.body}");
+        return [];
+      }
+    } catch (error) {
+      print("Error al llamar a la API: $error");
+      return [];
+    }
+  }
+}
 
 
 /// End ApiArsac Group Code

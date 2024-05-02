@@ -20,6 +20,12 @@ class AsistenciaEstudiantesWidget extends StatefulWidget {
 
 class _AsistenciaEstudiantesWidgetState
     extends State<AsistenciaEstudiantesWidget> {
+
+  late DateTime selectedDateDesde = DateTime.now();
+  String FechaDesdeFormateada = "";
+  late DateTime selectedDateHasta = DateTime.now();
+  String FechaHastaFormateada = "";
+
   int getIdCurso = 0;
   int getIdMateria = 0;
 
@@ -35,6 +41,66 @@ class _AsistenciaEstudiantesWidgetState
   String user = "";
   // Lista para almacenar la asistencia del estudiante
   List<dynamic> listaAsistenciaEstudiante = [];
+
+  Future<void> _selectDateDesde(BuildContext context) async {
+    String soloFecha = "";
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateDesde,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDateDesde) {
+      final DateTime selectedDate =
+          DateTime(picked.year, picked.month, picked.day);
+      String fecha = selectedDate.toString();
+      List<String> miLista = [];
+      miLista.add(fecha);
+
+      for (int i = 0; i < miLista.length; i++) {
+        String fechaCompleta = miLista[i];
+        soloFecha =
+            fechaCompleta.split(' ')[0]; // Toma solo la parte de la fecha
+        // Esto imprimirá solo la fecha, por ejemplo: 2024-04-17
+      }
+
+      setState(() {
+        selectedDateDesde = selectedDate;
+        FechaDesdeFormateada = soloFecha;
+        print(FechaDesdeFormateada);
+      });
+    }
+  }
+
+  Future<void> _selectDateHasta(BuildContext context) async {
+    String soloFecha = "";
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateHasta,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDateHasta) {
+      final DateTime selectedDate =
+          DateTime(picked.year, picked.month, picked.day);
+      String fecha = selectedDate.toString();
+      List<String> miLista = [];
+      miLista.add(fecha);
+
+      for (int i = 0; i < miLista.length; i++) {
+        String fechaCompleta = miLista[i];
+        soloFecha =
+            fechaCompleta.split(' ')[0]; // Toma solo la parte de la fecha
+        // Esto imprimirá solo la fecha, por ejemplo: 2024-04-17
+      }
+
+      setState(() {
+        selectedDateHasta = selectedDate;
+        FechaHastaFormateada = soloFecha;
+        print(FechaHastaFormateada);
+      });
+    }
+  }
 
   Future<void> _fetchMateriasData() async {
     ApiMateriasPorEstudianteCall apiCall = ApiMateriasPorEstudianteCall();
@@ -55,12 +121,12 @@ class _AsistenciaEstudiantesWidgetState
   }
 
   Future<void> _fetchConsultaAsistenciaEstudiante(
-      String pUser, int pMateria, int pCurso) async {
+      String pUser, int pMateria, int pCurso, String pRango1, String pRango2) async {
     ApiConsultarAsistenciaEstudianteCall apiCall =
         ApiConsultarAsistenciaEstudianteCall();
 
     List<dynamic> data =
-        await apiCall.fetchConsultaAsistEstudiante(pUser, pMateria, pCurso);
+        await apiCall.fetchConsultaAsistEstudiante(pUser, pMateria, pCurso, pRango1, pRango2);
     setState(() {
       listaAsistenciaEstudiante = data;
       print(listaAsistenciaEstudiante);
@@ -115,6 +181,8 @@ class _AsistenciaEstudiantesWidgetState
     user = miUser.nombreUsuario;
     _fetchMateriasData();
     _fetchCursosData();
+    selectedDateDesde = DateTime.now();
+    selectedDateHasta = DateTime.now();
     _model = createModel(context, () => AsistenciaEstudiantesModel());
   }
 
@@ -202,7 +270,7 @@ class _AsistenciaEstudiantesWidgetState
                                       ),
                                       child: FFButtonWidget(
                                         onPressed: () {
-                                          print('Button pressed ...');
+                                          _selectDateDesde(context);
                                         },
                                         text: 'Desde',
                                         icon: const Icon(
@@ -267,7 +335,7 @@ class _AsistenciaEstudiantesWidgetState
                                         ),
                                         child: FFButtonWidget(
                                           onPressed: () {
-                                            print('Button pressed ...');
+                                            _selectDateHasta(context);
                                           },
                                           text: 'Hasta',
                                           icon: const Icon(
@@ -393,7 +461,7 @@ class _AsistenciaEstudiantesWidgetState
                         child: FFButtonWidget(
                           onPressed: () {
                             _fetchConsultaAsistenciaEstudiante(
-                                user, getIdMateria, getIdCurso);
+                                user, getIdMateria, getIdCurso, FechaDesdeFormateada, FechaHastaFormateada);
                           },
                           text: 'Generar',
                           options: FFButtonOptions(

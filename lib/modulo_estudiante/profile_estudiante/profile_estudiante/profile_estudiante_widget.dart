@@ -41,15 +41,9 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
     setState(() {
       informacionPerfilDocente = data;
       for (int i = 0; i < data.length; i++) {
-        profesion = data[i]['Profesion'];
+        
         edad = data[i]['Edad'];
         documento = data[i]['Identificacion'];
-
-        print(profesion);
-        print(edad);
-        print(documento);
-
-
       }
     });
   }
@@ -190,7 +184,7 @@ class _ProfileEstudianteWidgetState extends State<ProfileEstudianteWidget> {
                                   .override(
                                     fontFamily: 'Outfit',
                                     color: const Color(0xFF15161E),
-                                    fontSize: 14.0,
+                                    fontSize: 17.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w600,
                                   ),

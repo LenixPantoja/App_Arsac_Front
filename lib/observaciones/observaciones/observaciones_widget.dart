@@ -689,7 +689,7 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
                                                 ),
                                               ),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               width: double
                                                   .infinity, // Ancho máximo disponible
                                               child: Expanded(

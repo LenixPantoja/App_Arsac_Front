@@ -22,6 +22,11 @@ class _ObservacionesEstudianteWidgetState
     extends State<ObservacionesEstudianteWidget> {
   int getIdCurso = 0;
   int getIdMateria = 0;
+  
+  late DateTime selectedDateDesde = DateTime.now();
+  String FechaDesdeFormateada = "";
+  late DateTime selectedDateHasta = DateTime.now();
+  String FechaHastaFormateada = "";
 
   // Lista para almacenar las materias que dicta el docente
   List<dynamic> listaMateriasEstudiante = [];
@@ -45,6 +50,67 @@ class _ObservacionesEstudianteWidgetState
     });
   }
 
+Future<void> _selectDateDesde(BuildContext context) async {
+    String soloFecha = "";
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateDesde,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDateDesde) {
+      final DateTime selectedDate =
+          DateTime(picked.year, picked.month, picked.day);
+      String fecha = selectedDate.toString();
+      List<String> miLista = [];
+      miLista.add(fecha);
+
+      for (int i = 0; i < miLista.length; i++) {
+        String fechaCompleta = miLista[i];
+        soloFecha =
+            fechaCompleta.split(' ')[0]; // Toma solo la parte de la fecha
+        // Esto imprimirá solo la fecha, por ejemplo: 2024-04-17
+      }
+
+      setState(() {
+        selectedDateDesde = selectedDate;
+        FechaDesdeFormateada = soloFecha;
+        print(FechaDesdeFormateada);
+      });
+    }
+  }
+
+  Future<void> _selectDateHasta(BuildContext context) async {
+    String soloFecha = "";
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDateHasta,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDateHasta) {
+      final DateTime selectedDate =
+          DateTime(picked.year, picked.month, picked.day);
+      String fecha = selectedDate.toString();
+      List<String> miLista = [];
+      miLista.add(fecha);
+
+      for (int i = 0; i < miLista.length; i++) {
+        String fechaCompleta = miLista[i];
+        soloFecha =
+            fechaCompleta.split(' ')[0]; // Toma solo la parte de la fecha
+        // Esto imprimirá solo la fecha, por ejemplo: 2024-04-17
+      }
+
+      setState(() {
+        selectedDateHasta = selectedDate;
+        FechaHastaFormateada = soloFecha;
+        print(FechaHastaFormateada);
+      });
+    }
+  }
+
+
   Future<void> _fetchCursosData() async {
     ApiCursosEstudiantesCall apiCall = ApiCursosEstudiantesCall();
     // Call the function to fetch subject data
@@ -55,12 +121,12 @@ class _ObservacionesEstudianteWidgetState
   }
 
   Future<void> _fetchConsultaObservacionesEstudiante(
-      String pUser, int pMateria, int pCurso) async {
+      String pUser, int pMateria, int pCurso, String pRango1, String pRango2) async {
     ApiConsultarObservacionesEstudianteCall apiCall =
         ApiConsultarObservacionesEstudianteCall();
 
     List<dynamic> data =
-        await apiCall.fetchConsultaObserEstudiante(pUser, pMateria, pCurso);
+        await apiCall.fetchConsultaObserEstudiante(pUser, pMateria, pCurso, pRango1, pRango2);
     setState(() {
       listaObservacionesEstudiante = data;
       print(listaObservacionesEstudiante);
@@ -116,6 +182,8 @@ class _ObservacionesEstudianteWidgetState
     user = miUser.nombreUsuario;
     _fetchMateriasData();
     _fetchCursosData();
+    selectedDateDesde = DateTime.now();
+    selectedDateHasta = DateTime.now();
     _model = createModel(context, () => ObservacionesEstudianteModel());
   }
 
@@ -291,7 +359,7 @@ class _ObservacionesEstudianteWidgetState
                                                                             FFButtonWidget(
                                                                           onPressed:
                                                                               () {
-                                                                            print('Button pressed ...');
+                                                                            _selectDateDesde(context);
                                                                           },
                                                                           text:
                                                                               'Desde',
@@ -376,7 +444,7 @@ class _ObservacionesEstudianteWidgetState
                                                                               FFButtonWidget(
                                                                             onPressed:
                                                                                 () {
-                                                                              print('Button pressed ...');
+                                                                              _selectDateHasta(context);
                                                                             },
                                                                             text:
                                                                                 'Hassta',
@@ -592,9 +660,43 @@ class _ObservacionesEstudianteWidgetState
                                                             ),
                                                             child:
                                                                 FFButtonWidget(
-                                                              onPressed: () {
+                                                              onPressed: () async{
 
-                                                                _fetchConsultaObservacionesEstudiante(user, getIdMateria, getIdCurso);
+                                                                _fetchConsultaObservacionesEstudiante(user, getIdMateria, getIdCurso, FechaDesdeFormateada, FechaHastaFormateada);
+                                                                if (listaObservacionesEstudiante.isEmpty){
+                                                                  await showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (alertDialogContext) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                          '! Mensaje ¡',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black), // Cambia el color del texto a blanco
+                                                        ),
+                                                        backgroundColor: Color.fromARGB(255, 224, 216, 101), // Cambia el color de fondo a verde
+                                                        content: const Text(
+                                                          'No hay datos para el rango seleccionado',
+                                                          style: TextStyle(
+                                                              color: Color.fromARGB(255, 0, 0, 0)), // Cambia el color del texto a blanco
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    alertDialogContext),
+                                                            child: Text(
+                                                              'Ok',
+                                                              style: TextStyle(
+                                                                  color: Color.fromARGB(255, 0, 0, 0)), // Cambia el color del texto a blanco
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                                }
                                                               },
                                                               text:
                                                                   'Generar Lista',
@@ -712,239 +814,28 @@ class _ObservacionesEstudianteWidgetState
                                                 ),
                                               ),
                                             ),
-                                            Align(
-                                              alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                              child: Container(
-                                                width: double.infinity,
-                                                height: 660.0,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                  border: Border.all(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                  ),
-                                                ),
-                                                child: Card(
-                                                  clipBehavior: Clip
-                                                      .antiAliasWithSaveLayer,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                  elevation: 12.0,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  child: SingleChildScrollView(
-                                                    primary: false,
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .stretch,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                Text(
-                                                                  'ronal estebanfigueroa mora',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'Readex Pro',
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                      ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Align(
-                                                              alignment:
-                                                                  const AlignmentDirectional(
-                                                                      0.0, 0.0),
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  Align(
-                                                                    alignment:
-                                                                        const AlignmentDirectional(
-                                                                            0.0,
-                                                                            0.0),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          30.0,
-                                                                          0.0),
-                                                                      child:
-                                                                          Container(
-                                                                        width:
-                                                                            38.0,
-                                                                        height:
-                                                                            40.0,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).secondaryBackground,
-                                                                        ),
-                                                                        child:
-                                                                            Card(
-                                                                          clipBehavior:
-                                                                              Clip.antiAliasWithSaveLayer,
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).secondaryBackground,
-                                                                          elevation:
-                                                                              4.0,
-                                                                          shape:
-                                                                              RoundedRectangleBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                          ),
-                                                                          child:
-                                                                              InkWell(
-                                                                            splashColor:
-                                                                                Colors.transparent,
-                                                                            focusColor:
-                                                                                Colors.transparent,
-                                                                            hoverColor:
-                                                                                Colors.transparent,
-                                                                            highlightColor:
-                                                                                Colors.transparent,
-                                                                            onTap:
-                                                                                () async {
-                                                                              context.pushNamed('EditarObservacion');
-                                                                            },
-                                                                            child:
-                                                                                ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(8.0),
-                                                                              child: Image.asset(
-                                                                                'assets/images/lapiz__2_-removebg-preview.png',
-                                                                                width: 306.0,
-                                                                                height: 200.0,
-                                                                                fit: BoxFit.contain,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                        0.0,
-                                                                        0.0,
-                                                                        12.0,
-                                                                        0.0),
-                                                                    child:
-                                                                        Container(
-                                                                      width:
-                                                                          38.0,
-                                                                      height:
-                                                                          40.0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .secondaryBackground,
-                                                                      ),
-                                                                      child:
-                                                                          Card(
-                                                                        clipBehavior:
-                                                                            Clip.antiAliasWithSaveLayer,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .secondaryBackground,
-                                                                        elevation:
-                                                                            4.0,
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(8.0),
-                                                                        ),
-                                                                        child:
-                                                                            InkWell(
-                                                                          splashColor:
-                                                                              Colors.transparent,
-                                                                          focusColor:
-                                                                              Colors.transparent,
-                                                                          hoverColor:
-                                                                              Colors.transparent,
-                                                                          highlightColor:
-                                                                              Colors.transparent,
-                                                                          onTap:
-                                                                              () async {
-                                                                            var confirmDialogResponse = await showDialog<bool>(
-                                                                                  context: context,
-                                                                                  builder: (alertDialogContext) {
-                                                                                    return AlertDialog(
-                                                                                      title: const Text('Eliminar Observación'),
-                                                                                      content: const Text('¿Esta Seguro(@) de eliminar la observacion del estudiante?'),
-                                                                                      actions: [
-                                                                                        TextButton(
-                                                                                          onPressed: () => Navigator.pop(alertDialogContext, false),
-                                                                                          child: const Text('Cancelar'),
-                                                                                        ),
-                                                                                        TextButton(
-                                                                                          onPressed: () => Navigator.pop(alertDialogContext, true),
-                                                                                          child: const Text('Confirmar'),
-                                                                                        ),
-                                                                                      ],
-                                                                                    );
-                                                                                  },
-                                                                                ) ??
-                                                                                false;
-                                                                          },
-                                                                          child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(0.0),
-                                                                            child:
-                                                                                Image.asset(
-                                                                              'assets/images/borrar_(1).png',
-                                                                              width: 300.0,
-                                                                              height: 200.0,
-                                                                              fit: BoxFit.contain,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                            Expanded(
+                        child: SingleChildScrollView(
+                          physics:
+                              const AlwaysScrollableScrollPhysics(), // Ajustar al contenido disponible
+                          child: DataTable(
+                            columns: const [
+                              DataColumn(label: Text('Curso')),
+                              DataColumn(label: Text('Descripción')),
+                              DataColumn(label: Text('Materia')),
+                            ],
+                            rows: listaObservacionesEstudiante.map((item) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(Text(item['Curso'])),
+                                  DataCell(Text(item['Descripcion'])),
+                                  DataCell(Text(item['Materia'])),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
                                           ],
                                         ),
                                       ),

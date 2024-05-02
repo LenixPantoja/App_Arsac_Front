@@ -31,6 +31,8 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
   // Guarda el nombre de la materia seleccionada por el usuario
   String materiaSeleccionada = "";
 
+  String identificacionEstudiante = "";
+
   late AsistenciaModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -103,6 +105,8 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
     for (int i = 0; i < listaEstudiantesMC.length; i++) {
       if (listaEstudiantesMC[i]["id"] == pIdEstudiante &&
           listaEstudiantesMC[i]["Identificacion_Estudiante"] == pDocumento) {
+        print(listaEstudiantesMC[i]["Identificacion_Estudiante"]);
+
         valid = true;
       }
     }
@@ -491,7 +495,6 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                               if (confirmDialogResponse) {
                                                 int miMatricula =
                                                     estudianteMC["id"];
-                                                print("Pasa pot aqui");
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute<Null>(
                                                         builder: (BuildContext
@@ -664,101 +667,125 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                               print(estudianteMC["id"]);
 
                                               Null soporte = null;
+
                                               if (esValido(id_matricula,
-                                                  ScanMode.QR.toString())) {
-                                                print(
-                                                    "El estudiante selecciona y la cedula del QR son correctos");
-                                                await showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title:
-                                                          Text("¡ Mensaje !"),
-                                                      content: Text(
-                                                          "El estudiante selecciona y la cedula del QR son correctos"),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child:
-                                                              Text("Aceptar"),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              } else {
-                                                print(
-                                                    "El estudiante selecciona y la cedula del que NO SON CORRECTOS");
-                                                    await showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title:
-                                                          Text("¡ Mensaje !"),
-                                                      content: Text(
-                                                          "El estudiante selecciona y la cedula del que NO SON CORRECTOS"),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child:
-                                                              Text("Aceptar"),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              }
+                                                  _model.scanner)) {
+                                                _model.apiResultnmd =
+                                                    await ApiArsacGroup
+                                                        .apiAsistenciaEstudianteCall
+                                                        .callAsistencia(
+                                                            tipoAsistencia:
+                                                                tipoAsistencia,
+                                                            descripcion:
+                                                                descripcion,
+                                                            horaLlegada:
+                                                                formattedDateTime
+                                                                    .toString(),
+                                                            soporte: soporte,
+                                                            matriculaEstudiante:
+                                                                id_matricula
+                                                                    .toString());
 
-                                              _model.apiResultnmd =
-                                                  await ApiArsacGroup
-                                                      .apiAsistenciaEstudianteCall
-                                                      .callAsistencia(
-                                                          tipoAsistencia:
-                                                              tipoAsistencia,
-                                                          descripcion:
-                                                              descripcion,
-                                                          horaLlegada:
-                                                              formattedDateTime
-                                                                  .toString(),
-                                                          soporte: soporte,
-                                                          matriculaEstudiante:
-                                                              id_matricula
-                                                                  .toString());
-
-                                              if ((_model.apiResultnmd
-                                                      ?.succeeded ??
-                                                  true)) {
-                                                await showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (alertDialogContext) {
-                                                    return AlertDialog(
-                                                        title: const Text(
-                                                            'CORRECTO'),
+                                                if ((_model.apiResultnmd
+                                                        ?.succeeded ??
+                                                    true)) {
+                                                  await showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (alertDialogContext) {
+                                                      return AlertDialog(
+                                                        title: Text(
+                                                          'CORRECTO',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white), // Cambia el color del texto a blanco
+                                                        ),
+                                                        backgroundColor: Colors
+                                                            .green, // Cambia el color de fondo a verde
                                                         content: Text(
-                                                            'Se registró la asistencia del estudiante ${estudianteMC["Nombre_Estudiante"]}'),
+                                                          'Se registró la asistencia del estudiante ${estudianteMC["Nombre_Estudiante"]}',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white), // Cambia el color del texto a blanco
+                                                        ),
                                                         actions: [
                                                           TextButton(
                                                             onPressed: () =>
                                                                 Navigator.pop(
                                                                     alertDialogContext),
-                                                            child: const Text(
-                                                                'Ok'),
+                                                            child: Text(
+                                                              'Ok',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white), // Cambia el color del texto a blanco
+                                                            ),
                                                           ),
-                                                        ]);
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  await showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (alertDialogContext) {
+                                                      return AlertDialog(
+                                                          title: const Text(
+                                                              'Error'),
+                                                          content: const Text(
+                                                              'Hubo un problema al consumir el servicio REG.AS.'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      alertDialogContext),
+                                                              child: const Text(
+                                                                  'Ok'),
+                                                            ),
+                                                          ]);
+                                                    },
+                                                  );
+                                                }
+                                              } else {
+                                                await showDialog(
+                                                  // ignore: use_build_context_synchronously
+                                                  context: context,
+                                                  builder:
+                                                      (alertDialogContext) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        '! ERROR DE LECTURA ¡',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .white), // Cambia el color del texto a blanco
+                                                      ),
+                                                      backgroundColor: Colors
+                                                          .red, // Cambia el color de fondo a rojo
+                                                      content: const Text(
+                                                        'El carnet NO pertenece al estudiante \n \n \n¡ Vuelva a escanear !',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        // Cambia el color del texto a blanco
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                  alertDialogContext),
+                                                          child: const Text(
+                                                            'Ok',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white), // Cambia el color del texto a blanco
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
                                                   },
                                                 );
-                                              } else {
-                                                print("errorrrrrrr");
                                               }
+
                                               setState(() {});
                                             },
                                             child: ClipRRect(
