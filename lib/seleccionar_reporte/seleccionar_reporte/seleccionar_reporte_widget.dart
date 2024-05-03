@@ -1,3 +1,12 @@
+import 'dart:io';
+
+import 'package:arsac_app/backend/api_requests/api_calls.dart';
+import 'package:arsac_app/flutter_flow/flutter_flow_drop_down.dart';
+import 'package:arsac_app/flutter_flow/form_field_controller.dart';
+import 'package:arsac_app/reporte_diario/reporte_diario/PDFGeneratorDiario%20copy.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
+
 import '/componentes/menu/menu_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -5,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'seleccionar_reporte_model.dart';
 export 'seleccionar_reporte_model.dart';
+import 'package:pdf/pdf.dart' as pdfLib;
 
 class SeleccionarReporteWidget extends StatefulWidget {
   const SeleccionarReporteWidget({super.key});
@@ -15,6 +25,7 @@ class SeleccionarReporteWidget extends StatefulWidget {
 }
 
 class _SeleccionarReporteWidgetState extends State<SeleccionarReporteWidget> {
+  String user = "";
   late SeleccionarReporteModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -22,6 +33,8 @@ class _SeleccionarReporteWidgetState extends State<SeleccionarReporteWidget> {
   @override
   void initState() {
     super.initState();
+    Usuario miUser = Usuario();
+    user = miUser.nombreUsuario;
     _model = createModel(context, () => SeleccionarReporteModel());
   }
 
@@ -289,7 +302,6 @@ class _SeleccionarReporteWidgetState extends State<SeleccionarReporteWidget> {
                                     ),
                                   ),
                                 ),
-                                
                               ],
                             ),
                           ),
@@ -326,7 +338,7 @@ class _SeleccionarReporteWidgetState extends State<SeleccionarReporteWidget> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8.0),
                                       child: Image.asset(
-                                        'assets/images/TextGrafica.svg',
+                                        'assets/images/Grafica.png',
                                         width: 300.0,
                                         height: 200.0,
                                         fit: BoxFit.fill,
@@ -337,7 +349,7 @@ class _SeleccionarReporteWidgetState extends State<SeleccionarReporteWidget> {
                                 Expanded(
                                   child: Container(
                                     width: 283.0,
-                                    height: 100.0,
+                                    height: 60.0,
                                     decoration: BoxDecoration(
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryBackground,
@@ -351,19 +363,103 @@ class _SeleccionarReporteWidgetState extends State<SeleccionarReporteWidget> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                       ),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: SvgPicture.asset(
-                                          'assets/images/Grafica.png',
-                                          width: 300.0,
-                                          height: 200.0,
-                                          fit: BoxFit.fill,
+                                      child: FlutterFlowDropDown<String>(
+                                        controller: _model
+                                                .dropDownValueController ??=
+                                            FormFieldController<String>(null),
+                                        options: const [
+                                          'GRAFICA BARRAS',
+                                          'GRAFICA CIRCULAR',
+                                          'GRAFICA AGRUPACION',
+                                          'GRAFICA DISPERSION'
+                                        ],
+                                        onChanged: (String? val) async {
+                                          setState(
+                                              () => _model.dropDownValue = val);
+                                          ApiGraficasEstadisticasCallPdf
+                                              graficaData =
+                                              ApiGraficasEstadisticasCallPdf();
+
+                                          if (val == "GRAFICA BARRAS") {
+                                            List<dynamic> reporte =
+                                                await graficaData.fetchGraficas(
+                                                    user, "BARRAS");
+                                            await _savePDFToFile(
+                                                reporte
+                                                    .map((e) => e as int)
+                                                    .toList(),
+                                                'GRAFICA BARRAS');
+                                          } else {
+                                            if (val == "GRAFICA CIRCULAR") {
+                                              List<dynamic> reporte =
+                                                  await graficaData
+                                                      .fetchGraficas(
+                                                          user, "PASTEL");
+                                              await _savePDFToFile(
+                                                  reporte
+                                                      .map((e) => e as int)
+                                                      .toList(),
+                                                  'GRAFICA CIRCULAR');
+                                            } else {
+                                              if (val == "GRAFICA AGRUPACION") {
+                                                List<dynamic> reporte =
+                                                    await graficaData
+                                                        .fetchGraficas(
+                                                            user, "BARRASGRUPADAS");
+                                                await _savePDFToFile(
+                                                    reporte
+                                                        .map((e) => e as int)
+                                                        .toList(),
+                                                    'GRAFICA AGRUPADA');
+                                              }else{
+                                                if (val == "GRAFICA DISPERSION"){
+                                                  List<dynamic> reporte =
+                                                      await graficaData
+                                                         .fetchGraficas(
+                                                              user, "DISPERSION");
+                                                  await _savePDFToFile(
+                                                      reporte
+                                                         .map((e) => e as int)
+                                                         .toList(),
+                                                      'GRAFICA DISPERSION');
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        width: 300.0,
+                                        height: 56.0,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Readex Pro',
+                                              letterSpacing: 0.0,
+                                            ),
+                                        hintText: 'Seleccione Grafica',
+                                        icon: FaIcon(
+                                          FontAwesomeIcons.chartLine,
+                                          color: FlutterFlowTheme.of(context)
+                                              .success,
+                                          size: 24.0,
                                         ),
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                        elevation: 2.0,
+                                        borderColor:
+                                            FlutterFlowTheme.of(context)
+                                                .alternate,
+                                        borderWidth: 2.0,
+                                        borderRadius: 8.0,
+                                        margin: const EdgeInsetsDirectional
+                                            .fromSTEB(16.0, 4.0, 16.0, 4.0),
+                                        hidesUnderline: true,
+                                        isOverButton: true,
+                                        isSearchable: false,
+                                        isMultiSelect: false,
                                       ),
                                     ),
                                   ),
-                                ),                          
+                                ),
                               ],
                             ),
                           ),
@@ -401,6 +497,46 @@ class _SeleccionarReporteWidgetState extends State<SeleccionarReporteWidget> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  // Funcion para descargar el pdf
+  Future<void> _savePDFToFile(List<int> pdfBytes, String fileName) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$fileName.pdf');
+    await file.writeAsBytes(pdfBytes);
+    print('PDF guardado en: ${file.path}');
+
+    // Mostrar alerta
+    await showDialog(
+      context: context,
+      builder: (alertDialogContext) {
+        return AlertDialog(
+          title: Text('Éxito'),
+          content: Text('Se ha generado el PDF correctamente ✅.'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(alertDialogContext);
+                  // Abrir el PDF después de mostrar la alerta
+                  _openPDF(file.path);
+                },
+                child: Text(
+                  'Continuar',
+                  style: TextStyle(color: Color(0xFC16397E)),
+                )),
+          ],
+        );
+      },
+    );
+  }
+
+  void _openPDF(String filePath) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PDFGeneratorDiario(pdfPath: filePath),
       ),
     );
   }

@@ -1,0 +1,1 @@
+ D:\\ESPACIO\ DE\ TRABAJO\ SISTEMAS\ CLINIZAD\\TESISAPP\\App_Arsac_Front\\.dart_tool\\flutter_build\\be04eeda60af41aef239466a33967534\\native_assets.yaml: 
