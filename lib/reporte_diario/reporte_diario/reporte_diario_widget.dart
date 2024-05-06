@@ -277,11 +277,11 @@ class _ReporteDiarioWidgetState extends State<ReporteDiarioWidget> {
                                                   Colors.transparent,
                                               onTap: () async {
                                                 String url =
-                                                    'https://06e8-8-242-169-8.ngrok-free.app/api/reportePorDiarioXLSX?pRango2=$miFechaRango&pRango1=$miFechaRango&pUser=$usuarioDocente';
+                                                    'https://b087-38-51-243-37.ngrok-free.app/api/reportePorDiarioXLSX?pRango2=$miFechaRango&pRango1=$miFechaRango&pUser=$usuarioDocente';
                                                 print(url);
 
                                                 await launchURL(
-                                                    'https://06e8-8-242-169-8.ngrok-free.app/api/reportePorDiarioXLSX?pRango2=$miFechaRango&pRango1=$miFechaRango&pUser=$usuarioDocente');
+                                                    'https://b087-38-51-243-37.ngrok-free.app/api/reportePorDiarioXLSX?pRango2=$miFechaRango&pRango1=$miFechaRango&pUser=$usuarioDocente');
                                               },
                                               child: ClipRRect(
                                                 borderRadius:

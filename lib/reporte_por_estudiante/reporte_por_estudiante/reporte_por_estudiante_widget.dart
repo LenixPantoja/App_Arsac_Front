@@ -1028,11 +1028,11 @@ class _ReportePorEstudianteWidgetState
                                                         obtenerIdMateria(
                                                             materiaSeleccionada);
                                                     String url =
-                                                        'https://06e8-8-242-169-8.ngrok-free.app/api/reporteEstudianteXLSX?pNumeroDocumento=$identificacionEstudiante&pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$username';
+                                                        'https://b087-38-51-243-37.ngrok-free.app/api/reporteEstudianteXLSX?pNumeroDocumento=$identificacionEstudiante&pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$username';
                                                     print(url);
 
                                                     await launchURL(
-                                                        'https://06e8-8-242-169-8.ngrok-free.app/api/reporteEstudianteXLSX?pNumeroDocumento=$identificacionEstudiante&pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$username');
+                                                        'https://b087-38-51-243-37.ngrok-free.app/api/reporteEstudianteXLSX?pNumeroDocumento=$identificacionEstudiante&pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$username');
                                                   },
                                             ),
                                           ],

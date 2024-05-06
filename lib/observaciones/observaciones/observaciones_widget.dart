@@ -1,4 +1,4 @@
-import 'package:arsac_app/index.dart';
+import 'package:arsac_app/editar_observacion/editar_observacion/editar_observacion_widget.dart';
 
 import '/componentes/menu/menu_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -36,11 +36,9 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
   String materiaSeleccionada = "";
   // Guarda el estudiante seleccionado por el usuario
   String estudianteSeleccionado = "";
-
   late ObservacionesModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
   Future<void> _fetchMateriasData() async {
     ApiMateriasPorDocenteCall apiCall = ApiMateriasPorDocenteCall();
     // Call the function to fetch subject data
@@ -78,6 +76,42 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
     setState(() {
       listaObservacionesEstudiante = data;
       print(listaObservacionesEstudiante);
+      if (listaObservacionesEstudiante.isEmpty) {
+        print("sfg");
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (alertDialogContext) {
+            return AlertDialog(
+              title: const Text(
+                '! Ups ¡',
+                style: TextStyle(
+                    color: Color.fromARGB(
+                        255, 0, 0, 0)), // Cambia el color del texto a blanco
+              ),
+              backgroundColor: Color.fromARGB(
+                  255, 254, 254, 254), // Cambia el color de fondo a verde
+              content: Text(
+                'El estudiante no tiene observaciones registradas.',
+                style: const TextStyle(
+                    color: Color.fromARGB(
+                        255, 0, 0, 0)), // Cambia el color del texto a blanco
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(alertDialogContext),
+                  child: Text(
+                    'Ok',
+                    style: TextStyle(
+                        color: const Color.fromARGB(255, 36, 36,
+                            36)), // Cambia el color del texto a blanco
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
     });
   }
 
@@ -151,13 +185,13 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
     super.initState();
     _fetchMateriasData();
     _fetchCursosData();
-
     _model = createModel(context, () => ObservacionesModel());
   }
 
   @override
   void dispose() {
     _model.dispose();
+
     super.dispose();
   }
 
@@ -166,402 +200,393 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      floatingActionButton: Align(
-        alignment: const AlignmentDirectional(1.0, -1.0),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
-          child: FloatingActionButton(
-            onPressed: () async {
-              context.pushNamed(
-                'CrearObservaciones',
-                extra: <String, dynamic>{
-                  kTransitionInfoKey: const TransitionInfo(
-                    hasTransition: true,
-                    transitionType: PageTransitionType.bottomToTop,
-                    duration: Duration(milliseconds: 300),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 152.0,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
                   ),
-                },
-              );
-            },
-            backgroundColor: FlutterFlowTheme.of(context).info,
-            elevation: 20.0,
-            child: Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset(
-                'assets/images/Diseo_sin_ttulo_(2).png',
-                fit: BoxFit.fill,
-                alignment: const Alignment(0.0, 0.0),
-              ),
-            ),
-          ),
-        ),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-        ),
-        child: SingleChildScrollView(
-          primary: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 152.0,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: SvgPicture.asset(
-                    'assets/images/Reporte_(12).svg',
-                    width: 300.0,
-                    height: 188.0,
-                    fit: BoxFit.fill,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: SvgPicture.asset(
+                      'assets/images/Reporte_(12).svg',
+                      width: 300.0,
+                      height: 188.0,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 1056.0,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: const AlignmentDirectional(0.0, 1.0),
-                        child: Container(
-                          width: double.infinity,
-                          height: 1050.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                          ),
+                Container(
+                  width: double.infinity,
+                  height: 1056.0,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: const AlignmentDirectional(0.0, 1.0),
                           child: Container(
-                            width: 100.0,
-                            height: 209.0,
+                            width: double.infinity,
+                            height: 1050.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
                             ),
-                            child: Card(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              elevation: 4.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0.0),
+                            child: Container(
+                              width: 100.0,
+                              height: 209.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 965.0,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0.0, 12.0, 0.0, 0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      0.0, 12.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Expanded(
-                                                    child: Container(
-                                                      width: 100.0,
-                                                      height: 100.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                      ),
-                                                      child: Card(
-                                                        clipBehavior: Clip
-                                                            .antiAliasWithSaveLayer,
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      0.0),
+                              child: Card(
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 965.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0.0, 12.0, 0.0, 0.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        0.0, 12.0, 0.0, 0.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Container(
+                                                        width: 100.0,
+                                                        height: 100.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
                                                         ),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  12.0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              Expanded(
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceEvenly,
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          Padding(
-                                                                        padding: const EdgeInsetsDirectional
-                                                                            .fromSTEB(
-                                                                            0.0,
-                                                                            8.0,
-                                                                            0.0,
-                                                                            0.0),
+                                                        child: Card(
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        0.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    12.0),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              children: [
+                                                                Expanded(
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceEvenly,
+                                                                    children: [
+                                                                      Expanded(
                                                                         child:
-                                                                            Container(
-                                                                          width:
-                                                                              149.0,
-                                                                          height:
-                                                                              73.0,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondaryBackground,
-                                                                          ),
+                                                                            Padding(
+                                                                          padding: const EdgeInsetsDirectional
+                                                                              .fromSTEB(
+                                                                              0.0,
+                                                                              8.0,
+                                                                              0.0,
+                                                                              0.0),
                                                                           child:
-                                                                              Column(
-                                                                            mainAxisSize:
-                                                                                MainAxisSize.max,
-                                                                            children: [
-                                                                              Expanded(
-                                                                                child: Card(
-                                                                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                                                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                                                                                  elevation: 12.0,
-                                                                                  shape: RoundedRectangleBorder(
-                                                                                    borderRadius: BorderRadius.circular(8.0),
-                                                                                  ),
-                                                                                  child: FlutterFlowDropDown<String>(
-                                                                                    controller: _model.dropDownValueController1 ??= FormFieldController<String>(null),
-                                                                                    options: listaCursosDocente.map<String>((curso) => curso["nombre_curso"] + ' | ' + curso["materia"] as String).toList(),
-                                                                                    onChanged: (String? val) {
-                                                                                      setState(() => _model.dropDownValue1 = val);
-                                                                                      cursoSeleccionado = val!;
-                                                                                      int idCurso = obtenerIdCurso(cursoSeleccionado);
-                                                                                      int idMateria = obtenerIdMateria(materiaSeleccionada);
-                                                                                      _fetchEstudiantesData(idMateria, idCurso);
-
-                                                                                      print(listaEstudiantesMC);
-                                                                                    },
-                                                                                    width: 292.0,
-                                                                                    height: 53.0,
-                                                                                    textStyle: FlutterFlowTheme.of(context).bodyMedium,
-                                                                                    hintText: 'Materia',
-                                                                                    icon: Icon(
-                                                                                      Icons.date_range_sharp,
-                                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                      size: 24.0,
+                                                                              Container(
+                                                                            width:
+                                                                                149.0,
+                                                                            height:
+                                                                                73.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                            ),
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              children: [
+                                                                                Expanded(
+                                                                                  child: Card(
+                                                                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                    elevation: 12.0,
+                                                                                    shape: RoundedRectangleBorder(
+                                                                                      borderRadius: BorderRadius.circular(8.0),
                                                                                     ),
-                                                                                    fillColor: FlutterFlowTheme.of(context).secondaryBackground,
-                                                                                    elevation: 2.0,
-                                                                                    borderColor: FlutterFlowTheme.of(context).alternate,
-                                                                                    borderWidth: 2.0,
-                                                                                    borderRadius: 8.0,
-                                                                                    margin: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 4.0),
-                                                                                    hidesUnderline: true,
-                                                                                    isOverButton: true,
-                                                                                    isSearchable: false,
-                                                                                    isMultiSelect: false,
+                                                                                    child: FlutterFlowDropDown<String>(
+                                                                                      controller: _model.dropDownValueController1 ??= FormFieldController<String>(null),
+                                                                                      options: listaCursosDocente.map<String>((curso) => curso["nombre_curso"] + ' | ' + curso["materia"] as String).toList(),
+                                                                                      onChanged: (String? val) {
+                                                                                        setState(() => _model.dropDownValue1 = val);
+                                                                                        cursoSeleccionado = val!;
+                                                                                        int idCurso = obtenerIdCurso(cursoSeleccionado);
+                                                                                        int idMateria = obtenerIdMateria(materiaSeleccionada);
+                                                                                        _fetchEstudiantesData(idMateria, idCurso);
+
+                                                                                        print(listaEstudiantesMC);
+                                                                                      },
+                                                                                      width: 292.0,
+                                                                                      height: 53.0,
+                                                                                      textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            fontFamily: 'Readex Pro',
+                                                                                            letterSpacing: 0.0,
+                                                                                          ),
+                                                                                      hintText: 'Materia y Curso',
+                                                                                      icon: Icon(
+                                                                                        Icons.date_range_sharp,
+                                                                                        color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                        size: 24.0,
+                                                                                      ),
+                                                                                      fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                      elevation: 2.0,
+                                                                                      borderColor: FlutterFlowTheme.of(context).alternate,
+                                                                                      borderWidth: 2.0,
+                                                                                      borderRadius: 8.0,
+                                                                                      margin: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 4.0),
+                                                                                      hidesUnderline: true,
+                                                                                      isOverButton: true,
+                                                                                      isSearchable: false,
+                                                                                      isMultiSelect: false,
+                                                                                    ),
                                                                                   ),
                                                                                 ),
-                                                                              ),
-                                                                            ],
+                                                                              ],
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      0.0, 12.0, 0.0, 0.0),
-                                              child: Container(
-                                                width: double.infinity,
-                                                height: 84.0,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                ),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Card(
-                                                      clipBehavior: Clip
-                                                          .antiAliasWithSaveLayer,
-                                                      color: FlutterFlowTheme
-                                                              .of(context)
-                                                          .secondaryBackground,
-                                                      elevation: 12.0,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                      ),
-                                                      child:
-                                                          FlutterFlowDropDown<
-                                                              String>(
-                                                        controller: _model
-                                                                .dropDownValueController3 ??=
-                                                            FormFieldController<
-                                                                String>(null),
-                                                        options: listaEstudiantesMC
-                                                            .map<String>((estudiante) =>
-                                                                estudiante['id']
-                                                                        .toString() +
-                                                                    estudiante[
-                                                                        'Nombre_Estudiante'] as String)
-                                                            .toList(),
-                                                        onChanged:
-                                                            (String? val) {
-                                                          setState(() => _model
-                                                                  .dropDownValue2 =
-                                                              val);
-                                                          estudianteSeleccionado =
-                                                              val!;
-                                                        },
-                                                        width: 365.0,
-                                                        height: 61.0,
-                                                        searchHintTextStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .labelMedium,
-                                                        searchTextStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium,
-                                                        hintText:
-                                                            'Lista Estudiantes',
-                                                        searchHintText:
-                                                            'Lista Estudiantes',
-                                                        icon: Icon(
-                                                          Icons.arrow_drop_down,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryText,
-                                                          size: 24.0,
-                                                        ),
-                                                        fillColor: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        elevation: 2.0,
-                                                        borderColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .alternate,
-                                                        borderWidth: 2.0,
-                                                        borderRadius: 8.0,
-                                                        margin:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(16.0,
-                                                                4.0, 16.0, 4.0),
-                                                        hidesUnderline: true,
-                                                        isOverButton: true,
-                                                        isSearchable: true,
-                                                        isMultiSelect: false,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                      0.0, 12.0, 0.0, 0.0),
-                                              child: Container(
-                                                width: 320.0,
-                                                height: 73.0,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                ),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Card(
-                                                            clipBehavior: Clip
-                                                                .antiAliasWithSaveLayer,
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        0.0, 12.0, 0.0, 0.0),
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 84.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Card(
+                                                        clipBehavior: Clip
+                                                            .antiAliasWithSaveLayer,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
+                                                        elevation: 12.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        child:
+                                                            FlutterFlowDropDown<
+                                                                String>(
+                                                          controller: _model
+                                                                  .observacionesEstudianteValueController ??=
+                                                              FormFieldController<
+                                                                  String>(null),
+                                                          options: listaEstudiantesMC
+                                                              .map<String>((estudiante) =>
+                                                                  estudiante['id']
+                                                                          .toString() +
+                                                                      estudiante[
+                                                                          'Nombre_Estudiante'] as String)
+                                                              .toList(),
+                                                          onChanged:
+                                                              (String? val) {
+                                                            setState(() => _model
+                                                                    .dropDownValue2 =
+                                                                val);
+                                                            estudianteSeleccionado =
+                                                                val!;
+                                                          },
+                                                          width: 365.0,
+                                                          height: 61.0,
+                                                          searchHintTextStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                  ),
+                                                          searchTextStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                  ),
+                                                          textStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                  ),
+                                                          hintText:
+                                                              'Lista Estudiantes',
+                                                          searchHintText:
+                                                              'Lista Estudiantes',
+                                                          icon: Icon(
+                                                            Icons
+                                                                .arrow_drop_down,
                                                             color: FlutterFlowTheme
                                                                     .of(context)
-                                                                .secondaryBackground,
-                                                            elevation: 12.0,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          14.0),
-                                                            ),
-                                                            child:
-                                                                FFButtonWidget(
-                                                              onPressed: () {
+                                                                .secondaryText,
+                                                            size: 24.0,
+                                                          ),
+                                                          fillColor: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                          elevation: 2.0,
+                                                          borderColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .alternate,
+                                                          borderWidth: 2.0,
+                                                          borderRadius: 8.0,
+                                                          margin:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                  16.0,
+                                                                  4.0,
+                                                                  16.0,
+                                                                  4.0),
+                                                          hidesUnderline: true,
+                                                          isOverButton: true,
+                                                          isSearchable: true,
+                                                          isMultiSelect: false,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                        0.0, 12.0, 0.0, 0.0),
+                                                child: Container(
+                                                  width: 320.0,
+                                                  height: 73.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Card(
+                                                              clipBehavior: Clip
+                                                                  .antiAliasWithSaveLayer,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryBackground,
+                                                              elevation: 12.0,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            14.0),
+                                                              ),
+                                                              child:
+                                                                  FFButtonWidget(
+                                                                onPressed: () {
                                                                 int idEstudiante =
                                                                     obtenerIdEstudiante(
                                                                         estudianteSeleccionado);
@@ -577,121 +602,126 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
                                                                     idMateria,
                                                                     idCurso);
                                                               },
-                                                              text:
-                                                                  'Generar Lista',
-                                                              options:
-                                                                  FFButtonOptions(
-                                                                height: 40.0,
-                                                                padding:
-                                                                    const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                                iconPadding:
-                                                                    const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                                color: const Color(
-                                                                    0xFF57E84E),
-                                                                textStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmall
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryText,
-                                                                    ),
-                                                                elevation: 3.0,
-                                                                borderSide:
-                                                                    const BorderSide(
-                                                                  color: Colors
-                                                                      .transparent,
-                                                                  width: 1.0,
+                                                                text:
+                                                                    'Generar Lista',
+                                                                options:
+                                                                    FFButtonOptions(
+                                                                  height: 40.0,
+                                                                  padding:
+                                                                      const EdgeInsetsDirectional
+                                                                          .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                  iconPadding:
+                                                                      const EdgeInsetsDirectional
+                                                                          .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                  color: const Color(
+                                                                      0xFF57E84E),
+                                                                  textStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Readex Pro',
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryText,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                      ),
+                                                                  elevation:
+                                                                      3.0,
+                                                                  borderSide:
+                                                                      const BorderSide(
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    width: 1.0,
+                                                                  ),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8.0),
                                                                 ),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            Align(
-                                              alignment:
-                                                  const AlignmentDirectional(
-                                                      0.0, 0.0),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                        0.0, 0.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  height: 62.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                  ),
-                                                  child: Align(
-                                                    alignment:
-                                                        const AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Card(
-                                                      clipBehavior: Clip
-                                                          .antiAliasWithSaveLayer,
+                                              Align(
+                                                alignment:
+                                                    const AlignmentDirectional(
+                                                        0.0, 0.0),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          0.0, 12.0, 0.0, 12.0),
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    height: 62.0,
+                                                    decoration: BoxDecoration(
                                                       color: FlutterFlowTheme
                                                               .of(context)
                                                           .secondaryBackground,
-                                                      elevation: 4.0,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                      ),
-                                                      child: Align(
-                                                        alignment:
-                                                            const AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Text(
-                                                          'Lista De Observaciones Estudiante',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                fontSize: 20.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
+                                                    ),
+                                                    child: Align(
+                                                      alignment:
+                                                          const AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                      child: Card(
+                                                        clipBehavior: Clip
+                                                            .antiAliasWithSaveLayer,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
+                                                        elevation: 4.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        child: Align(
+                                                          alignment:
+                                                              const AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                          child: Text(
+                                                            'Lista De Observaciones Estudiante',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  fontSize:
+                                                                      20.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: double
-                                                  .infinity, // Ancho máximo disponible
+                                              Expanded(
+                                               // Ancho máximo disponible
                                               child: Expanded(
                                                 child: SingleChildScrollView(
                                                   physics:
@@ -817,43 +847,44 @@ class _ObservacionesWidgetState extends State<ObservacionesWidget> {
                                                 ),
                                               ),
                                             ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ].divide(const SizedBox(height: 30.0)),
+                    ].divide(const SizedBox(height: 30.0)),
+                  ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 70.0,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: wrapWithModel(
-                        model: _model.menuModel,
-                        updateCallback: () => setState(() {}),
-                        child: const MenuWidget(),
+                Container(
+                  width: double.infinity,
+                  height: 70.0,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: wrapWithModel(
+                          model: _model.menuModel,
+                          updateCallback: () => setState(() {}),
+                          child: const MenuWidget(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

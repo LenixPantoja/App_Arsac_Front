@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:arsac_app/flutter_flow/flutter_flow_util.dart';
 import 'package:http/http.dart' as http;
@@ -303,6 +304,11 @@ class ApiAsistenciaEstudianteCall {
       "soporte": soporte,
       "matricula_estudiante": matriculaEstudiante
     };
+    print(tipoAsistencia);
+    print(descripcion);
+    print(horaLlegada);
+    print(soporte);
+    print(matriculaEstudiante);
     print("pasa aqui");
     final String ffApiRequestBody = jsonEncode(requestBody);
 
@@ -321,7 +327,7 @@ class ApiAsistenciaEstudianteCall {
       alwaysAllowBody: false,
     );
     print("antes de pasar por api");
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print("Pasó por api");
       return response;
     } else {

@@ -90,6 +90,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   syncfusion_flutter_xlsio: ^25.1.41
+  dio: ^5.4.3+1
 
 dependency_overrides:
   http: 1.2.0

@@ -88,42 +88,60 @@ class _HorarioWidgetState extends State<HorarioWidget> {
     }
 
     // Mostramos la ventana emergente con la información de la clase y el día de la semana
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Horario del docente'),
-          content: SizedBox(
-            width: double.maxFinite,
-            height: 300,
-            child: ListView.builder(
-              itemCount: listaHorarioPorDia.length,
-              itemBuilder: (BuildContext context, int index) {
-                Map<String, dynamic> horario = listaHorarioPorDia[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Materia: ${horario["Materia"]}'),
-                    Text('Día: ${horario["Dia"]}'),
-                    Text('Hora inicio: ${horario["Hora_inicio"]}'),
-                    Text('Hora fin: ${horario["Hora_fin"]}'),
-                    Divider(), // Separador entre cada elemento
-                  ],
-                );
-              },
+    if (listaHorarioPorDia.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Horario del docente'),
+            content: SizedBox(
+              width: double.maxFinite,
+              height: 300,
+              child: ListView.builder(
+                itemCount: listaHorarioPorDia.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Map<String, dynamic> horario = listaHorarioPorDia[index];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Materia: ${horario["Materia"]}'),
+                      Text('Día: ${horario["Dia"]}'),
+                      Text('Hora inicio: ${horario["Hora_inicio"]}'),
+                      Text('Hora fin: ${horario["Hora_fin"]}'),
+                      Divider(), // Separador entre cada elemento
+                    ],
+                  );
+                },
+              ),
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: Text('Cerrar'),
-            ),
-          ],
-        );
-      },
-    );
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cerrar el diálogo
+                },
+                child: Text('Cerrar'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (alertDialogContext) {
+          return AlertDialog(
+            title: const Text('! Ups ¡'),
+            content: const Text('No hay materias asignadas para este día'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(alertDialogContext),
+                child: const Text('Ok'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   late HorarioModel _model;

@@ -604,6 +604,50 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                                   matriculaEstudiante:
                                                                       idMatricula
                                                                           .toString());
+                                                              if ((_model
+                                                                      .apiResultnmd
+                                                                      ?.succeeded ??
+                                                                  true)) {
+                                                                await showDialog(
+                                                                  // ignore: use_build_context_synchronously
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (alertDialogContext) {
+                                                                    return AlertDialog(
+                                                                      title:
+                                                                          const Text(
+                                                                        'CORRECTO',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white), // Cambia el color del texto a blanco
+                                                                      ),
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .green, // Cambia el color de fondo a verde
+                                                                      content:
+                                                                          Text(
+                                                                        'Se registró la FALTA del estudiante ${estudianteMC["Nombre_Estudiante"]}',
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                                Colors.white), // Cambia el color del texto a blanco
+                                                                      ),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                          onPressed: () =>
+                                                                              Navigator.pop(alertDialogContext),
+                                                                          child:
+                                                                              Text(
+                                                                            'Ok',
+                                                                            style:
+                                                                                TextStyle(color: Colors.white), // Cambia el color del texto a blanco
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    );
+                                                                  },
+                                                                );
+                                                              }
                                                               // This line prints an empty string, you might want to put something meaningful here.
                                                             },
                                                             child: const Text(
@@ -762,7 +806,7 @@ class _AsistenciaWidgetState extends State<AsistenciaWidget> {
                                                       backgroundColor: Colors
                                                           .red, // Cambia el color de fondo a rojo
                                                       content: const Text(
-                                                        'El carnet NO pertenece al estudiante \n \n \n¡ Vuelva a escanear !',
+                                                        'El carnet NO pertenece al estudiante o no se detectó un carnét válido \n \n \n¡ Vuelva a escanear !',
                                                         style: TextStyle(
                                                             color:
                                                                 Colors.white),

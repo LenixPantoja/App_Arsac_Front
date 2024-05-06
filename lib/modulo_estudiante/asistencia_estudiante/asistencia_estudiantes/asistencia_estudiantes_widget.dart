@@ -20,7 +20,6 @@ class AsistenciaEstudiantesWidget extends StatefulWidget {
 
 class _AsistenciaEstudiantesWidgetState
     extends State<AsistenciaEstudiantesWidget> {
-
   late DateTime selectedDateDesde = DateTime.now();
   String FechaDesdeFormateada = "";
   late DateTime selectedDateHasta = DateTime.now();
@@ -120,13 +119,13 @@ class _AsistenciaEstudiantesWidgetState
     });
   }
 
-  Future<void> _fetchConsultaAsistenciaEstudiante(
-      String pUser, int pMateria, int pCurso, String pRango1, String pRango2) async {
+  Future<void> _fetchConsultaAsistenciaEstudiante(String pUser, int pMateria,
+      int pCurso, String pRango1, String pRango2) async {
     ApiConsultarAsistenciaEstudianteCall apiCall =
         ApiConsultarAsistenciaEstudianteCall();
 
-    List<dynamic> data =
-        await apiCall.fetchConsultaAsistEstudiante(pUser, pMateria, pCurso, pRango1, pRango2);
+    List<dynamic> data = await apiCall.fetchConsultaAsistEstudiante(
+        pUser, pMateria, pCurso, pRango1, pRango2);
     setState(() {
       listaAsistenciaEstudiante = data;
       print(listaAsistenciaEstudiante);
@@ -461,7 +460,11 @@ class _AsistenciaEstudiantesWidgetState
                         child: FFButtonWidget(
                           onPressed: () {
                             _fetchConsultaAsistenciaEstudiante(
-                                user, getIdMateria, getIdCurso, FechaDesdeFormateada, FechaHastaFormateada);
+                                user,
+                                getIdMateria,
+                                getIdCurso,
+                                FechaDesdeFormateada,
+                                FechaHastaFormateada);
                           },
                           text: 'Generar',
                           options: FFButtonOptions(
@@ -623,9 +626,8 @@ class _AsistenciaEstudiantesWidgetState
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  width: double
-                                      .infinity, // Ancho máximo disponible
+                                Expanded(
+                                  // Ancho máximo disponible
                                   child: Expanded(
                                     child: SingleChildScrollView(
                                       physics:
@@ -652,28 +654,8 @@ class _AsistenciaEstudiantesWidgetState
                                     ),
                                   ),
                                 ),
+                                
                               ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            0.0, 12.0, 0.0, 0.0),
-                        child: Container(
-                          width: 150.0,
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                          ),
-                          child: Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            elevation: 12.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14.0),
                             ),
                           ),
                         ),

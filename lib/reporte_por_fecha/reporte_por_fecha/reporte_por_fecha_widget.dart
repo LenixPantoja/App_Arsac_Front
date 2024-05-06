@@ -821,11 +821,11 @@ class _ReportePorFechaWidgetState extends State<ReportePorFechaWidget> {
                                                         obtenerIdMateria(
                                                             materiaSeleccionada);
                                                     String url =
-                                                        'https://06e8-8-242-169-8.ngrok-free.app/api/reportePorCursoXLSX?pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$usuarioDocente';
+                                                        'https://b087-38-51-243-37.ngrok-free.app/api/reportePorCursoXLSX?pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$usuarioDocente';
                                                     print(url);
 
                                                     await launchURL(
-                                                        'https://06e8-8-242-169-8.ngrok-free.app/api/reportePorCursoXLSX?pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$usuarioDocente');
+                                                        'https://b087-38-51-243-37.ngrok-free.app/api/reportePorCursoXLSX?pMateria=$id_materia&pCurso=$id_curso&pRango1=$FechaDesdeFormateada&pRango2=$FechaHastaFormateada&pUser=$usuarioDocente');
                                                   },
                                                 ),
                                               ],

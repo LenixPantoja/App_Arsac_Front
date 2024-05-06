@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:arsac_app/backend/api_requests/api_calls.dart';
+import 'package:arsac_app/cargar_permisos/cargar_permisos/cargarImagen.dart';
+
 import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 import '/componentes/menu/menu_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -17,6 +21,7 @@ export 'cargar_permisos_model.dart';
 class CargarPermisosWidget extends StatefulWidget {
   //Creamos variable para recibir lo que entrega la vista asistencia
   final int miMatricula;
+
   //Definimos como parametro en la clase lo que la vista asistencia entreg.
   const CargarPermisosWidget({required this.miMatricula, Key? key})
       : super(key: key);
@@ -28,6 +33,8 @@ class CargarPermisosWidget extends StatefulWidget {
 class _CargarPermisosWidgetState extends State<CargarPermisosWidget> {
   late CargarPermisosModel _model;
 
+  File? image_to_upload;
+  String dataImageBase64 = "";
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -177,43 +184,51 @@ class _CargarPermisosWidgetState extends State<CargarPermisosWidget> {
                         Expanded(
                           child: FFButtonWidget(
                             onPressed: () async {
-                              final selectedMedia =
-                                  await selectMediaWithSourceBottomSheet(
-                                context: context,
-                                maxWidth: 320.00,
-                                maxHeight: 320.00,
-                                allowPhoto: true,
-                                backgroundColor: Colors.white,
-                              );
-                              if (selectedMedia != null &&
-                                  selectedMedia.every((m) => validateFileFormat(
-                                      m.storagePath, context))) {
-                                setState(() => _model.isDataUploading = true);
-                                var selectedUploadedFiles = <FFUploadedFile>[];
-
-                                try {
-                                  selectedUploadedFiles = selectedMedia
-                                      .map((m) => FFUploadedFile(
-                                            name: m.storagePath.split('/').last,
-                                            bytes: m.bytes,
-                                            height: m.dimensions?.height,
-                                            width: m.dimensions?.width,
-                                            blurHash: m.blurHash,
-                                          ))
-                                      .toList();
-                                } finally {
-                                  _model.isDataUploading = false;
-                                }
-                                if (selectedUploadedFiles.length ==
-                                    selectedMedia.length) {
-                                  setState(() {
-                                    _model.uploadedLocalFile =
-                                        selectedUploadedFiles.first;
-                                  });
-                                } else {
-                                  setState(() {});
-                                  return;
-                                }
+                              // CARGAR IMAGEN A LA APP
+                              final image = await getImage();
+                              if (image != null) {
+                                final bytes = await image.readAsBytes();
+                                final base64Image = base64Encode(bytes);
+                                print(
+                                    base64Image); // Aquí tienes la imagen codificada en base64
+                                setState(() {
+                                  dataImageBase64 = base64Image;
+                                });
+                                showDialog(
+                                  context: context,
+                                  builder: (alertDialogContext) {
+                                    return AlertDialog(
+                                      title: const Text('! Correcto ¡'),
+                                      content: const Text(
+                                          'Fotografia cargada con éxito'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(alertDialogContext),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (alertDialogContext) {
+                                    return AlertDialog(
+                                      title: const Text('! Ups ¡'),
+                                      content: const Text(
+                                          'No se detectó una imagen'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(alertDialogContext),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               }
                             },
                             text: 'Subir evidencia',
@@ -390,29 +405,90 @@ class _CargarPermisosWidgetState extends State<CargarPermisosWidget> {
                             String tipoAsistencia = "FALTA JUSTIFICADA";
                             String descripcion = _model.textController.text;
                             int idMatricula = widget.miMatricula;
-                            if (_model.uploadedLocalFile != null) {
-                              final bytes = _model.uploadedLocalFile.bytes;
-                              final directory =
-                                  await getApplicationDocumentsDirectory();
-                              final filePath = '/data/user/0/com.mycompany.arsacapp/cache/c2ab4b3a-73fd-4bce-ab66-5b88346f45ef2186688752475395855.jpg';
-                              File file = File(filePath);
-                              await file.writeAsBytes(bytes!);
-                              _model.apiResultnmd = await ApiArsacGroup
-                                  .apiAsistenciaEstudianteCall
-                                  .callAsistencia(
-                                tipoAsistencia: tipoAsistencia,
-                                descripcion: descripcion,
-                                horaLlegada: formattedDateTime.toString(),
-                                soporte: filePath,
-                                matriculaEstudiante: idMatricula.toString(),
-                              );
-                              print(tipoAsistencia);
-                              print(descripcion);
-                              print(formattedDateTime);
-                              print(filePath);
-                              print(idMatricula.toString());
+
+                            _model.apiResultnmd = await ApiArsacGroup
+                                .apiAsistenciaEstudianteCall
+                                .callAsistencia(
+                              tipoAsistencia: tipoAsistencia,
+                              descripcion: descripcion,
+                              horaLlegada: formattedDateTime.toString(),
+                              soporte: dataImageBase64,
+                              matriculaEstudiante: idMatricula.toString(),
+                            );
+
+                            if (descripcion.isNotEmpty &&
+                                dataImageBase64.isNotEmpty) {
+                              if ((_model.apiResultnmd?.succeeded ?? true)) {
+                                await showDialog(
+                                  // ignore: use_build_context_synchronously
+                                  context: context,
+                                  builder: (alertDialogContext) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        'CORRECTO',
+                                        style: TextStyle(
+                                            color: Colors
+                                                .white), // Cambia el color del texto a blanco
+                                      ),
+                                      backgroundColor: Colors
+                                          .green, // Cambia el color de fondo a verde
+                                      content: const Text(
+                                        'Se registró la falta justificada del estudiante',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(255, 255, 255,
+                                                255)), // Cambia el color del texto a blanco
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                             context.pushNamed('Asistencia',);
+                                          },
+                                          child: Text(
+                                            'Ok',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                             } else {
-                              // Manejar el caso en que no hay imagen cargada
+                              await showDialog(
+                                // ignore: use_build_context_synchronously
+                                context: context,
+                                builder: (alertDialogContext) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      '! Ups ¡',
+                                      style: TextStyle(
+                                          color: Colors
+                                              .white), // Cambia el color del texto a blanco
+                                    ),
+                                    backgroundColor: Colors
+                                        .red, // Cambia el color de fondo a rojo
+                                    content: const Text(
+                                      'Los datos estan incompletos \n \n \n¡ Intenta nuevamente !',
+                                      style: TextStyle(color: Colors.white),
+                                      // Cambia el color del texto a blanco
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(alertDialogContext),
+                                        child: const Text(
+                                          'Ok',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .white), // Cambia el color del texto a blanco
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             }
                           },
                           text: 'Guardar',
